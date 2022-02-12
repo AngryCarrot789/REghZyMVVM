@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>REghZyMVVM_MainID</PackageId>
+    <Authors>REghZy</Authors>
+    <Company />
+    <Description>A small package containing some base MVVM files, e.g BaseViewModel, RelayCommands, etc</Description>
+    <Copyright>MIT</Copyright>
+    <PackageTags>mvvm,wpf</PackageTags>
+  </PropertyGroup>
+
+</Project>
