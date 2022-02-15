@@ -2,13 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace REghZyMVVM.Utils {
+namespace REghZy.Utils {
     public static class CollectionUtils {
-        public static bool IsEmpty<T>(ICollection<T> enumerable) {
+        public static bool IsEmpty<T>(this ICollection<T> enumerable) {
             return enumerable.Count == 0;
         }
 
-        public static bool IsEmpty(ICollection enumerable) {
+        public static bool IsEmpty(this ICollection enumerable) {
             return enumerable.Count == 0;
         }
 

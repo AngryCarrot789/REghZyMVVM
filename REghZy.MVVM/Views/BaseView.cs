@@ -1,6 +1,6 @@
-using REghZyMVVM.ViewModels;
+using REghZy.MVVM.ViewModels;
 
-namespace REghZyMVVM.Views {
+namespace REghZy.MVVM.Views {
     /// <summary>
     /// An interface that a view can implement for easy access to their ViewModel
     /// <para>

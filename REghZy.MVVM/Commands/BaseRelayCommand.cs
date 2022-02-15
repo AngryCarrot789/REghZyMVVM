@@ -1,9 +1,10 @@
 using System;
 using System.Windows.Input;
 
-namespace REghZyMVVM.Commands {
+namespace REghZy.MVVM.Commands {
     /// <summary>
-    /// A base class, that implements ICommand, and also has a simple implementation of of <see cref="CanExecuteChanged"/> event handler
+    /// A base relay command class, that implements ICommand, and also has a simple
+    /// implementation for dealing with the <see cref="CanExecuteChanged"/> event handler
     /// </summary>
     public abstract class BaseRelayCommand : ICommand {
         /// <summary>

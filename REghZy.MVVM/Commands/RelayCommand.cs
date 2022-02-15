@@ -1,6 +1,6 @@
 using System;
 
-namespace REghZyMVVM.Commands {
+namespace REghZy.MVVM.Commands {
     /// <summary>
     /// A simple relay command, which does not take any parameters
     /// </summary>

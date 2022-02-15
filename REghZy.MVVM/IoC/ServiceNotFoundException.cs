@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace REghZyMVVM.IoC {
+namespace REghZy.MVVM.IoC {
     /// <summary>
     /// An exception thrown if a Service couldn't be found by IoC
     /// </summary>

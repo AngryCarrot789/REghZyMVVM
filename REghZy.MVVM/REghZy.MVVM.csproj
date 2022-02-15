@@ -2,12 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageId>REghZyMVVM_MainID</PackageId>
+    <PackageId>REghZy.MVVM</PackageId>
     <Authors>REghZy</Authors>
     <Company />
     <Description>A small package containing some base MVVM files, e.g BaseViewModel, RelayCommands, etc</Description>
     <Copyright>MIT</Copyright>
     <PackageTags>mvvm,wpf</PackageTags>
+    <RepositoryUrl>https://github.com/AngryCarrot789/REghZyMVVM</RepositoryUrl>
+    <RepositoryType>Github</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
 </Project>
