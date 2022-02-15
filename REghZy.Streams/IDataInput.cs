@@ -19,10 +19,10 @@ namespace REghZy.Streams {
         /// <summary>
         /// Reads the given number of bytes from the stream
         /// </summary>
-        /// <param name="buffer">The buffer to read into</param>
+        /// <param name="dest">The buffer to read into</param>
         /// <param name="offset">The offset in the buffer</param>
         /// <param name="count">The number of bytes to read</param>
-        int Read(byte[] buffer, int offset, int count);
+        int Read(byte[] dest, int offset, int count);
 
         /// <summary>
         /// Reads the exact number of bytes (specified by the given buffer's size) into the buffer (starting at 0)
@@ -31,8 +31,8 @@ namespace REghZy.Streams {
         /// where the offset is 0 and the length is the given buffer's length
         /// </para>
         /// </summary>
-        /// <param name="buffer">The buffer to put the bytes into</param>
-        void ReadFully(byte[] buffer);
+        /// <param name="dest">The buffer to put the bytes into</param>
+        void ReadFully(byte[] dest);
 
         /// <summary>
         /// Reads the exact given number of bytes into the given buffer (starting at the given offset)
@@ -40,10 +40,10 @@ namespace REghZy.Streams {
         /// The size of the buffer WILL NOT be checked, so it will throw an out of bounds exception if you mess up
         /// </para>
         /// </summary>
-        /// <param name="buffer">The buffer to put bytes into</param>
+        /// <param name="dest">The buffer to put bytes into</param>
         /// <param name="offset">The index specifying where to start writing into the buffer (inclusive)</param>
         /// <param name="length">The number of bytes to read (e.g 4 for an integer, 2 for a short, etc)</param>
-        void ReadFully(byte[] buffer, int offset, int length);
+        void ReadFully(byte[] dest, int offset, int length);
 
         /// <summary>
         /// Reads 1 byte and return true if its value is 1, otherwise false
@@ -184,18 +184,18 @@ namespace REghZy.Streams {
         /// <summary>
         /// Reads 'length' number of bytes into the given pointer buffer (starting at the given offset index)
         /// </summary>
-        /// <param name="ptr">The buffer to write bytes into</param>
+        /// <param name="dest">The buffer to write bytes into</param>
         /// <param name="offset">The index of where to start writing into the pointer (inclusive)</param>
         /// <param name="length">The give number of bytes to read</param>
-        unsafe void ReadPtr(byte* ptr, int offset, int length);
+        unsafe void ReadPtr(byte* dest, int offset, int length);
 
         /// <summary>
         /// Reads 'length' number of bytes into the given pointer (starting at the given offset index)
         /// </summary>
-        /// <param name="ptr">The pointer which should point to a buffer, which is where bytes will be written to</param>
+        /// <param name="dest">The pointer which should point to a buffer, which is where bytes will be written to</param>
         /// <param name="offset">The index of where to start writing into the pointer/buffer (inclusive)</param>
         /// <param name="length">The give number of bytes to read</param>
-        void ReadPtr(IntPtr ptr, int offset, int length);
+        void ReadPtr(IntPtr dest, int offset, int length);
 
         /// <summary>
         /// Reads a verified unmanaged type, where the given number of bytes will be read as the given type
@@ -208,17 +208,13 @@ namespace REghZy.Streams {
         T ReadPrimitive<T>() where T : unmanaged;
 
         /// <summary>
-        /// Reads a verified unmanaged type, where the given number of bytes will be read as the given type
+        /// Reads a verified unmanaged type, where the given number of bytes will be read into the given value instance
+        /// <para>
+        /// The number of bytes will be equivalent to the size of the generic unmanaged type passed to the method.
+        /// E.g, reading an integer (Int32) will read 4 bytes
+        /// </para>
         /// </summary>
-        /// <param name="length">The length/size of the unmanaged type, in bytes</param>
         /// <typeparam name="T">The unmanaged type</typeparam>
-        T ReadPrimitive<T>(int length) where T : unmanaged;
-
-        /// <summary>
-        /// Reads a verified unmanaged type, where the length of the type will be read and then that many bytes will be read as the given type
-        /// </summary>
-        /// <param name="length">The length/size of the unmanaged type, in bytes</param>
-        /// <typeparam name="T">The unmanaged type</typeparam>
-        T ReadPrimitiveLabelled<T>() where T : unmanaged;
+        T ReadPrimitive<T>(T value) where T : unmanaged;
     }
 }

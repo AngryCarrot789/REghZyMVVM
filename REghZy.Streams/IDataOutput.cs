@@ -21,17 +21,17 @@ namespace REghZy.Streams {
         /// <summary>
         /// Writes the given number of bytes, starting at the given offset, from the given buffer
         /// </summary>
-        /// <param name="buffer">The buffer to write data from</param>
+        /// <param name="src">The buffer to write data from</param>
         /// <param name="offset">The index to start reading from the buffer</param>
         /// <param name="count">The number of bytes to write</param>
-        void Write(byte[] buffer, int offset, int count);
+        void Write(byte[] src, int offset, int count);
 
         /// <summary>
         /// Writes the bytes in the given buffer, starting at the given offset
         /// </summary>
-        /// <param name="buffer">The buffer to write data from</param>
+        /// <param name="src">The buffer to write data from</param>
         /// <param name="offset">The index to start reading from the buffer</param>
-        void Write(byte[] buffer, int offset = 0);
+        void Write(byte[] src, int offset = 0);
 
         /// <summary>
         /// Writes a boolean value (1 byte)
@@ -168,34 +168,34 @@ namespace REghZy.Streams {
         /// <summary>
         /// Writes '2 * length' bytes from the given pointer (starting, in the pointer, at the given offset)
         /// </summary>
-        /// <param name="ptr">The pointer to get the chars from</param>
+        /// <param name="src">The pointer to get the chars from</param>
         /// <param name="offset">The offset within the pointer (usually this starts at 0)</param>
         /// <param name="length">The number of characters to write (not bytes, characters)</param>
-        unsafe void WritePtrUTF16(char* ptr, int offset, int length);
+        unsafe void WritePtrUTF16(char* src, int offset, int length);
 
         /// <summary>
         /// Writes 'length' bytes from the given pointer (starting, in the pointer, at the given offset)
         /// </summary>
-        /// <param name="cptr">The pointer to get the chars from</param>
+        /// <param name="src">The pointer to get the chars from</param>
         /// <param name="offset">The offset within the pointer (usually this starts at 0)</param>
         /// <param name="length">The number of characters/bytes to write</param>
-        unsafe void WritePtrUTF8(char* cptr, int offset, int length);
+        unsafe void WritePtrUTF8(char* src, int offset, int length);
 
         /// <summary>
         /// Writes 'length' bytes from the given pointer (starting, in the pointer, at the given offset)
         /// </summary>
-        /// <param name="ptr">The pointer to a buffer of characters</param>
+        /// <param name="src">The pointer to a buffer of characters</param>
         /// <param name="offset">The offset within the pointer (usually this starts at 0)</param>
         /// <param name="length">The number of characters/bytes to write</param>
-        unsafe void WritePtr(byte* ptr, int offset, int length);
+        unsafe void WritePtr(byte* src, int offset, int length);
 
         /// <summary>
         /// Writes 'length' bytes from the given pointer (starting, in the pointer, at the given offset)
         /// </summary>
-        /// <param name="ptr">The pointer to a buffer of characters</param>
+        /// <param name="src">The pointer to a buffer of characters</param>
         /// <param name="offset">The offset within the pointer (usually this starts at 0)</param>
         /// <param name="length">The number of characters/bytes to write</param>
-        void WritePtr(IntPtr ptr, int offset, int length);
+        void WritePtr(IntPtr src, int offset, int length);
 
         /// <summary>
         /// Writes a blittable value/object, where all of the value's bytes will be written
@@ -203,18 +203,5 @@ namespace REghZy.Streams {
         /// <param name="value">The value to write</param>
         /// <typeparam name="T">The blittable type</typeparam>
         void WritePrimitive<T>(T value) where T : unmanaged;
-        /// <summary>
-        /// Writes a blittable value/object, where all of the value's bytes will be written
-        /// </summary>
-        /// <param name="value">The value to write</param>
-        /// <typeparam name="T">The blittable type</typeparam>
-        void WritePrimitiveLabelled<T>(T value) where T : unmanaged;
-        /// <summary>
-        /// Writes a blittable value/object, where all of the value's bytes will be written
-        /// </summary>
-        /// <param name="value">The value to write</param>
-        /// <param name="length">The number of bytes to write</param>
-        /// <typeparam name="T">The blittable type</typeparam>
-        void WritePrimitiveLabelled<T>(T value, int length) where T : unmanaged;
     }
 }

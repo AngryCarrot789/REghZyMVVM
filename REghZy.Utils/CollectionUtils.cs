@@ -8,10 +8,6 @@ namespace REghZy.Utils {
             return enumerable.Count == 0;
         }
 
-        public static bool IsEmpty(this ICollection enumerable) {
-            return enumerable.Count == 0;
-        }
-
         /// <summary>
         /// A linq-based function, that checks if the given enumerable source is empty
         /// <para>
