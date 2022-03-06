@@ -2,13 +2,11 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <LangVersion>7.3</LangVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
       <OutputPath>bin\Release\</OutputPath>
-      <DocumentationFile>bin\Release\REghZy.Streams.xml</DocumentationFile>
+      <DocumentationFile>bin\Release\REghZy.Collections.xml</DocumentationFile>
     </PropertyGroup>
 
 </Project>

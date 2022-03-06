@@ -34,7 +34,7 @@ namespace REghZy.MVVM.Test {
             output.WriteShort(15);
             output.WriteStringUTF8("hello there lol");
 
-            // output.WritePrimitive<int>(45);
+            output.WritePrimitive<int>(45);
             // output.WritePrimitive<byte>(20);
             // KP_DATA data = new KP_DATA() { a = 5, b = 10, c = 15, d = 20 };
             // BlitUtils.LoadString(data.arr, "hello");

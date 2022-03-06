@@ -32,6 +32,21 @@ namespace REghZy.MVVM.ViewModels {
         }
 
         /// <summary>
+        /// Raises a propertychanged event, allowing the view to be updated. Pass in your private property, new value,
+        /// can also pass the property name but that's done for you.
+        /// </summary>
+        /// <param name="property">The private field that is used for "setting". This can</param>
+        /// <param name="newValue">The new value of this property</param>
+        /// <param name="propertyName">dont need to specify this, but the name of the property/field</param>
+        public void RaisePropertyChanged([CallerMemberName] string propertyName = null) {
+            if (propertyName == null) {
+                throw new ArgumentNullException("propertyName", "Property Name is null");
+            }
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        /// <summary>
         /// If checkEquality is true, and the propery and newValue are equal, then nothing will happen.
         /// Otherwise, the property changed event will be raised
         /// </summary>
@@ -70,6 +85,24 @@ namespace REghZy.MVVM.ViewModels {
             property = newValue;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             postChangedCallback?.Invoke(property);
+        }
+
+        /// <summary>
+        /// Calls the given pre-property-changed callback, raises the property changed event, and invokes the given post-property-changed callback
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="property">The private field that is used for "setting"</param>
+        /// <param name="newValue">The new value of this property</param>
+        /// <param name="callback">The method that gets called after the property changed, and contains the new value as a parameter</param>
+        /// <param name="preChangedCallback">The method that gets called before the property changed, and contains the old value as a parameter</param>
+        /// <param name="propertyName">Property name. This will be auto-filled by the compiler</param>
+        public void RaisePropertyChangedWithCallback(Action callback, [CallerMemberName] string propertyName = null) {
+            if (propertyName == null) {
+                throw new ArgumentNullException("propertyName", "Property Name is null");
+            }
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            callback?.Invoke();
         }
 
         /// <summary>

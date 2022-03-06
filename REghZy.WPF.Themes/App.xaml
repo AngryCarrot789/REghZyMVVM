@@ -1,0 +1,15 @@
+﻿<Application x:Class="REghZy.WPF.Themes.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:REghZy.WPF.Themes"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="SoftDark.xaml"/>
+                <ResourceDictionary Source="ControlColours.xaml"/>
+                <ResourceDictionary Source="Controls.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

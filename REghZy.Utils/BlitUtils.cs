@@ -33,14 +33,14 @@ namespace REghZy.Utils {
         /// <param name="length">The number of bytes to copy from src to dest</param>
         public static unsafe void CopyB64(byte* src, byte* dest, uint length) {
             uint len = length;
-            while (len > 64) {
+            while (len >= 64) {
                 *(B64*) dest = *(B64*) src;
                 dest += 64;
                 src += 64;
                 len -= 64;
             }
             
-            while (len > 16) {
+            while (len >= 16) {
                 *(B64*) dest = *(B64*) src;
                 dest += 16;
                 src += 16;

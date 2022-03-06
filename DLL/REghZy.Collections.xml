@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>REghZy.Collections</name>
+    </assembly>
+    <members>
+        <member name="M:REghZy.Collections.Multimaps.BaseMultiMap`2.GetOrCreate(`0)">
+            <summary>
+            A method that gets, or creates, a value collection for the given key
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="P:REghZy.Collections.Multimaps.IMultiMap`2.Keys">
+            <summary>
+            Returns a collection of keys that this multimap contains
+            </summary>
+        </member>
+        <member name="P:REghZy.Collections.Multimaps.IMultiMap`2.Values">
+            <summary>
+            Returns a collection of collections that this multimap contains
+            </summary>
+        </member>
+        <member name="P:REghZy.Collections.Multimaps.IMultiMap`2.Item(`0)">
+            <summary>
+            Returns a collection of values for the given key
+            </summary>
+            <param name="key">The key</param>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">The multimap does not contain the key</exception>
+        </member>
+        <member name="P:REghZy.Collections.Multimaps.IMultiMap`2.Count">
+            <summary>
+            Returns the size of this multimap (aka the number of keys)
+            </summary>
+        </member>
+        <member name="P:REghZy.Collections.Multimaps.IMultiMap`2.IsEmpty">
+            <summary>
+            Indicates whether this multimap is empty or not. This is equivalent to
+            <code>
+            this.Count == 0
+            </code>
+            </summary>
+        </member>
+        <member name="M:REghZy.Collections.Multimaps.IMultiMap`2.Get(`0)">
+            <summary>
+            Returns a collection of values for the given key
+            <para>
+            This is a normal method equivalent to <see cref="P:REghZy.Collections.Multimaps.IMultiMap`2.Item(`0)"/>
+            </para>
+            </summary>
+            <param name="key">The key</param>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">The multimap does not contain the key</exception>
+        </member>
+        <member name="M:REghZy.Collections.Multimaps.IMultiMap`2.Put(`0,`1)">
+            <summary>
+            Adds a value for the given key
+            </summary>
+        </member>
+        <member name="M:REghZy.Collections.Multimaps.IMultiMap`2.PutAll(`0,System.Collections.Generic.IEnumerable{`1})">
+            <summary>
+            Adds all of the values for the given key
+            </summary>
+        </member>
+        <member name="M:REghZy.Collections.Multimaps.IMultiMap`2.PutAll(REghZy.Collections.Multimaps.IMultiMap{`0,`1})">
+            <summary>
+            Adds all of the keys and their values from the given multimap to this multimap
+            </summary>
+        </member>
+        <member name="M:REghZy.Collections.Multimaps.IMultiMap`2.RemoveAll(`0)">
+            <summary>
+            Removes all of the values for the given key (and removes the key)
+            </summary>
+            <returns>
+            The values that were removed
+            </returns>
+        </member>
+        <member name="M:REghZy.Collections.Multimaps.IMultiMap`2.Remove(`0,`1)">
+            <summary>
+            Removes the value for the given key
+            </summary>
+        </member>
+        <member name="M:REghZy.Collections.Multimaps.IMultiMap`2.Contains(`0,`1)">
+            <summary>
+            Returns whether the given value is contained in this multimap for the given key
+            </summary>
+        </member>
+        <member name="M:REghZy.Collections.Multimaps.IMultiMap`2.ContainsKey(`0)">
+            <summary>
+            Returns whether the given key is contained in this multimap
+            </summary>
+        </member>
+        <member name="M:REghZy.Collections.Multimaps.IMultiMap`2.ContainsValue(`1)">
+            <summary>
+            Returns whether this multimap contains any trace of the given value, in any key
+            </summary>
+        </member>
+        <member name="M:REghZy.Collections.Multimaps.IMultiMap`2.Size">
+            <summary>
+            The size of this multimap. This is the exact same as <see cref="P:REghZy.Collections.Multimaps.IMultiMap`2.Count"/>
+            </summary>
+        </member>
+        <member name="M:REghZy.Collections.Multimaps.IMultiMap`2.Size(`0)">
+            <summary>
+            Returns the number of values there are for the given key, or 0 if the key doesn't exist
+            </summary>
+        </member>
+        <member name="M:REghZy.Collections.Multimaps.IMultiMap`2.Clear">
+            <summary>
+            Clears this map. This will not clear any underlying collections, meaning they will be left open for garbage collection
+            </summary>
+        </member>
+        <member name="M:REghZy.Collections.Multimaps.IMultiMap`2.ToMap">
+            <summary>
+            Converts this multimap into a dictionary. The dictionary will not affect this multimap in any way
+            </summary>
+        </member>
+        <member name="M:REghZy.Collections.Multimaps.LinkedListMutlimap`2.RemoveLast(`0)">
+            <summary>
+            Removes the last value from the linked list for the give key
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:REghZy.Collections.Multimaps.LinkedListMutlimap`2.RemoveFirst(`0)">
+            <summary>
+            Removes the first value from the linked list for the give key
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>REghZyPacketSystem.Serial</name>
+    </assembly>
+    <members>
+        <member name="T:REghZyPacketSystem.Serial.SerialConnection">
+            <summary>
+            A wrapper for a serial port, containing a data stream
+            </summary>
+        </member>
+        <member name="P:REghZyPacketSystem.Serial.SerialConnection.Port">
+            <summary>
+            The serial port that this serial connection uses to send/receive data
+            </summary>
+        </member>
+        <member name="M:REghZyPacketSystem.Serial.SerialConnection.ClearBuffers">
+            <summary>
+            Clears the serial buffers
+            </summary>
+        </member>
+        <member name="T:REghZyPacketSystem.Serial.SerialDataStream">
+            <summary>
+            A data stream that uses the <see cref="P:System.IO.Ports.SerialPort.BaseStream"/> for reading and writing data
+            </summary>
+        </member>
+        <member name="P:REghZyPacketSystem.Serial.SerialDataStream.Port">
+            <summary>
+            The serial port that this data stream uses
+            </summary>
+        </member>
+    </members>
+</doc>

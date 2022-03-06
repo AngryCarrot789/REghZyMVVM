@@ -1,0 +1,34 @@
+﻿using System;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+
+namespace REghZy.WPF.Attached {
+    public static class TextHinting {
+        public static readonly DependencyProperty ShowWhenFocusedProperty =
+            DependencyProperty.RegisterAttached(
+                "ShowWhenFocused",
+                typeof(bool),
+                typeof(TextHinting),
+                new FrameworkPropertyMetadata(false));
+
+        [Category("Appearance")]
+        public static void SetShowWhenFocused(Control control, bool value) {
+            if (control is TextBoxBase || control is PasswordBox) {
+                control.SetValue(ShowWhenFocusedProperty, value);
+            }
+
+            throw new ArgumentException("Control was not a TextBoxBase", nameof(control));
+        }
+
+        [Category("Appearance")]
+        public static bool GetShowWhenFocused(Control control) {
+            if (control is TextBoxBase || control is PasswordBox) {
+                return (bool) control.GetValue(ShowWhenFocusedProperty);
+            }
+
+            throw new ArgumentException("Control was not a TextBoxBase", nameof(control));
+        }
+    }
+}

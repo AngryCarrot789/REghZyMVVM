@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>REghZyPacketSystem.Sockets</name>
+    </assembly>
+    <members>
+        <member name="T:REghZyPacketSystem.Sockets.NetworkDataStream">
+            <summary>
+            A data stream that uses a <see cref="T:System.Net.Sockets.NetworkStream"/> as an underlying stream for reading/writing data
+            </summary>
+        </member>
+        <member name="P:REghZyPacketSystem.Sockets.NetworkDataStream.NetStream">
+            <summary>
+            The network stream used by this data stream. This data stream's base stream uses this too
+            </summary>
+        </member>
+        <member name="P:REghZyPacketSystem.Sockets.NetworkDataStream.Socket">
+            <summary>
+            The socket that this data stream uses
+            </summary>
+        </member>
+        <member name="T:REghZyPacketSystem.Sockets.SocketHelper">
+            <summary>
+            Set the scene: My computer, and an arduino. Even though an arduino can't run C# code... still
+            <para>
+            The arduino is the server, and it invokes <see cref="M:REghZyPacketSystem.Sockets.SocketHelper.AcceptClientConnection(System.Net.Sockets.Socket)"/>. This will wait
+            until my computer has tried to connect to it, and once it has, it begins sending/receiving packets
+            </para>
+            <para>
+            My computer makes a connection to the arduino by calling <see cref="M:REghZyPacketSystem.Sockets.SocketHelper.MakeConnectionToServer(System.Net.EndPoint)"/>. It sits
+            there and waits until the arduino accepts it (it will call <see cref="M:REghZyPacketSystem.Sockets.SocketHelper.AcceptClientConnection(System.Net.Sockets.Socket)"/>). And
+            then it begins sending/receiving packets
+            </para>
+            <para>
+            The reason the arduino is the server, is because it just is because i want it to be :-) and its easier
+            </para>
+            <para>
+            Whereas, my computer, it only needs that arduino connection, and no other connections
+            </para>
+            </summary>
+        </member>
+        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.CreateServerSocket(System.Net.EndPoint,System.Net.Sockets.AddressFamily,System.Net.Sockets.SocketType,System.Net.Sockets.ProtocolType)">
+            <summary>
+            This is typically used server side, to create the listener socket for accepting clients
+            </summary>
+            <param name="localEndPoint">The end point that this server is located at</param>
+            <param name="addressFamily">The address family</param>
+            <param name="socketType">
+            The type of socket this will be. This should usually be
+            a stream, because the connections are built around streams
+            </param>
+            <param name="protocolType">The protocol to use (e.g tcp, udp, etc)</param>
+            <returns>
+            The socket that is pre-bound to the given local end point (no need to call <see cref="M:System.Net.Sockets.Socket.Bind(System.Net.EndPoint)"/>)
+            </returns>
+        </member>
+        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.CreateServerSocket(System.Net.EndPoint,System.Net.Sockets.SocketType,System.Net.Sockets.ProtocolType)">
+            <summary>
+            This is typically used server side, to create the listener socket for accepting clients
+            </summary>
+            <param name="localEndPoint">The end point that this server is located at</param>
+            <param name="addressFamily">The address family</param>
+            <param name="socketType">
+            The type of socket this will be. This should usually be
+            a stream, because the connections are built around streams
+            </param>
+            <param name="protocolType">The protocol to use (e.g tcp, udp, etc)</param>
+            <returns>
+            The socket that is pre-bound to the given local end point (no need to call <see cref="M:System.Net.Sockets.Socket.Bind(System.Net.EndPoint)"/>)
+            </returns>
+        </member>
+        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.CreateServerSocket(System.Net.IPAddress,System.Int32,System.Net.Sockets.SocketType,System.Net.Sockets.ProtocolType)">
+            <summary>
+            Creates a socket (with the given socket type and protocol) and binds it to the given IP address and the given port
+            </summary>
+            <param name="address">The local IP address to bind to</param>
+            <param name="port">The port to use</param>
+            <param name="socketType">The socket type to use (usually should be stream, because that's what the packet systems use)</param>
+            <param name="protocolType">The protocol to use (TCP recommended, otherwise packet loss is probable)</param>
+            <returns>
+            A socket that is bound to the given port on the given IP. It is not in a listening state, that must be done manually
+            </returns>
+        </member>
+        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.CreateServerSocket(System.Int32,System.Net.Sockets.SocketType,System.Net.Sockets.ProtocolType)">
+            <summary>
+            Creates a socket (with the given socket type and protocol) and binds it to <see cref="F:System.Net.IPAddress.Any"/> and the given port
+            </summary>
+            <param name="port">The port to use</param>
+            <param name="socketType">The socket type to use (usually should be stream, because that's what the packet systems use)</param>
+            <param name="protocolType">The protocol to use (TCP recommended, otherwise packet loss is probable)</param>
+            <returns>
+            A socket that is bound to the given port on <see cref="F:System.Net.IPAddress.Any"/>. It is not in a listening state, that must be done manually
+            </returns>
+        </member>
+        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.MakeConnectionToServer(System.Net.EndPoint)">
+            <summary>
+            We are the client, and we want to make a connection to the server
+            <para>
+            You don't need to call <see cref="M:REghZyPacketSystem.BaseConnection.Connect"/>, it will be done automatically in this method
+            </para>
+            </summary>
+            <returns>
+            A connection that is already connected
+            </returns>
+        </member>
+        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.MakeConnectionToServerAsync(System.Net.EndPoint)">
+            <summary>
+            We are the client, and we want to make a connection to the server
+            <para>
+            You don't need to call <see cref="M:REghZyPacketSystem.BaseConnection.Connect"/>, it will be done automatically in this method
+            </para>
+            </summary>
+            <returns>
+            A connection that is already connected
+            </returns>
+        </member>
+        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.MakeConnectionToServer(System.Net.IPAddress,System.Int32)">
+            <summary>
+            We are the client, and we want to make a connection to the server
+            <para>
+            You don't need to call <see cref="M:REghZyPacketSystem.BaseConnection.Connect"/>, it will be done automatically in this method
+            </para>
+            </summary>
+            <returns>
+            A connection that is already connected
+            </returns>
+        </member>
+        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.MakeConnectionToServerAsync(System.Net.IPAddress,System.Int32)">
+            <summary>
+            We are the client, and we want to make a connection to the server
+            <para>
+            You don't need to call <see cref="M:REghZyPacketSystem.BaseConnection.Connect"/>, it will be done automatically in this method
+            </para>
+            </summary>
+            <returns>
+            A connection that is already connected
+            </returns>
+        </member>
+        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.AcceptClientConnection(System.Net.Sockets.Socket)">
+            <summary>
+            We are the server, and we want to accept any incomming connection from clients
+            <para>
+            You don't need to call <see cref="M:REghZyPacketSystem.BaseConnection.Connect"/> on the packet network that
+            this method returns, it won't do anything. See <see cref="T:REghZyPacketSystem.Sockets.SocketToClientConnection"/>;
+            it's a one-time connection, you must create a new instance to have a new connection
+            </para>
+            </summary>
+            <param name="server">The server connection</param>
+            <returns>
+            A connection that is connected to client
+            </returns>
+        </member>
+        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.AcceptClientConnectionAsync(System.Net.Sockets.Socket)">
+            <summary>
+            We are the server, and we want to accept any incomming connection from clients
+            <para>
+            You don't need to call <see cref="M:REghZyPacketSystem.BaseConnection.Connect"/> on the packet network that
+            this method returns, it won't do anything. See <see cref="T:REghZyPacketSystem.Sockets.SocketToClientConnection"/>;
+            it's a one-time connection, you must create a new instance to have a new connection
+            </para>
+            </summary>
+            <param name="server">The server connection</param>
+            <returns>
+            A connection that is connected to client
+            </returns>
+        </member>
+        <member name="T:REghZyPacketSystem.Sockets.SocketToClientConnection">
+            <summary>
+            Represents a one-time connection to the client. When this class is instantated, it is
+            assumed that the socket is already open. So calling <see cref="M:REghZyPacketSystem.Sockets.SocketToClientConnection.Connect"/> will do nothing
+            <para>
+            Calling <see cref="M:REghZyPacketSystem.Sockets.SocketToClientConnection.Disconnect"/> will fully disconenct and dispose of the socket,
+            meaning you cannot reconnect (it will throw an exception if you try to invoke <see cref="M:REghZyPacketSystem.Sockets.SocketToClientConnection.Connect"/>,
+            just for the sake of bug tracking)
+            </para>
+            </summary>
+        </member>
+        <member name="P:REghZyPacketSystem.Sockets.SocketToClientConnection.Stream">
+            <summary>
+            The data stream which is linked to the server
+            </summary>
+        </member>
+        <member name="P:REghZyPacketSystem.Sockets.SocketToClientConnection.IsConnected">
+            <summary>
+            Whether this client is connected to the server
+            </summary>
+        </member>
+        <member name="P:REghZyPacketSystem.Sockets.SocketToClientConnection.Client">
+            <summary>
+            The socket that this connection is connected to
+            </summary>
+        </member>
+        <member name="P:REghZyPacketSystem.Sockets.SocketToClientConnection.Server">
+            <summary>
+            The server that this connection uses
+            </summary>
+        </member>
+        <member name="T:REghZyPacketSystem.Sockets.SocketToServerConnection">
+            <summary>
+            A reusable client connection. This will wait until the server has
+            accepted a socket connection, and then allowing data to be transceived
+            </summary>
+        </member>
+        <member name="P:REghZyPacketSystem.Sockets.SocketToServerConnection.Stream">
+            <summary>
+            The data stream which is linked to the server
+            </summary>
+        </member>
+        <member name="P:REghZyPacketSystem.Sockets.SocketToServerConnection.IsConnected">
+            <summary>
+            Whether this client is connected to the server
+            </summary>
+        </member>
+        <member name="P:REghZyPacketSystem.Sockets.SocketToServerConnection.Socket">
+            <summary>
+            The socket which links to the server
+            </summary>
+        </member>
+        <member name="M:REghZyPacketSystem.Sockets.SocketToServerConnection.Connect">
+             <summary>
+            
+             </summary>
+             <exception cref="T:System.ObjectDisposedException">The object is disposed</exception>
+             <exception cref="T:REghZyPacketSystem.Exceptions.ConnectionStatusException">The connection is already open</exception>
+             <exception cref="T:REghZyPacketSystem.Exceptions.ConnectionFailureException">Failed to open the connection</exception>
+             <exception cref="T:System.IO.IOException">An IO exception, most likely the network stream failed to open</exception>
+        </member>
+        <member name="M:REghZyPacketSystem.Sockets.SocketToServerConnection.ConnectAsync">
+            <summary>
+            Attempts to connect asynchronously
+            </summary>
+            <exception cref="T:System.ObjectDisposedException">The object is disposed</exception>
+            <exception cref="T:REghZyPacketSystem.Exceptions.ConnectionStatusException">The connection is already open</exception>
+            <exception cref="T:REghZyPacketSystem.Exceptions.ConnectionFailureException">Failed to open the connection</exception>
+            <exception cref="T:System.IO.IOException">An IO exception, most likely the network stream failed to open</exception>
+        </member>
+    </members>
+</doc>

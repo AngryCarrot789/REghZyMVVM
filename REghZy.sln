@@ -3,13 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31911.196
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REghZy.MVVM", "REghZy.MVVM\REghZy.MVVM.csproj", "{79B76091-7C36-4D33-8B01-E434A1DA18C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "REghZy.MVVM", "REghZy.MVVM\REghZy.MVVM.csproj", "{79B76091-7C36-4D33-8B01-E434A1DA18C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REghZy.Utils", "REghZy.Utils\REghZy.Utils.csproj", "{C40FF2E9-2AA2-474B-98FD-4501D32797BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "REghZy.Utils", "REghZy.Utils\REghZy.Utils.csproj", "{C40FF2E9-2AA2-474B-98FD-4501D32797BB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REghZy.MVVM.Test", "REghZy.MVVM.Test\REghZy.MVVM.Test.csproj", "{23F3117E-C4BB-401B-9D48-C50FF4893385}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REghZy.Streams", "REghZy.Streams\REghZy.Streams.csproj", "{C19B025C-7C9B-493B-A7C5-E133BD504170}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "REghZy.Streams", "REghZy.Streams\REghZy.Streams.csproj", "{C19B025C-7C9B-493B-A7C5-E133BD504170}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REghZy.MVVM.Framework", "REghZy.MVVM.Framework\REghZy.MVVM.Framework.csproj", "{B6B189C5-1B5E-426B-9CA8-88B9B256997D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REghZy.Collections", "REghZy.Collections\REghZy.Collections.csproj", "{4F1E1889-77D8-4B41-87E2-FB513B120127}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REghZy.WPF", "REghZy.WPF\REghZy.WPF.csproj", "{2D4ABFC7-432F-4928-ADEB-275D0AAC1790}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REghZy.WPF.Themes", "REghZy.WPF.Themes\REghZy.WPF.Themes.csproj", "{506EFD88-4DDB-431C-BF69-8DA4A21F3B05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +41,22 @@ Global
 		{C19B025C-7C9B-493B-A7C5-E133BD504170}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C19B025C-7C9B-493B-A7C5-E133BD504170}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C19B025C-7C9B-493B-A7C5-E133BD504170}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6B189C5-1B5E-426B-9CA8-88B9B256997D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6B189C5-1B5E-426B-9CA8-88B9B256997D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6B189C5-1B5E-426B-9CA8-88B9B256997D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6B189C5-1B5E-426B-9CA8-88B9B256997D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F1E1889-77D8-4B41-87E2-FB513B120127}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F1E1889-77D8-4B41-87E2-FB513B120127}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F1E1889-77D8-4B41-87E2-FB513B120127}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F1E1889-77D8-4B41-87E2-FB513B120127}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D4ABFC7-432F-4928-ADEB-275D0AAC1790}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D4ABFC7-432F-4928-ADEB-275D0AAC1790}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D4ABFC7-432F-4928-ADEB-275D0AAC1790}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D4ABFC7-432F-4928-ADEB-275D0AAC1790}.Release|Any CPU.Build.0 = Release|Any CPU
+		{506EFD88-4DDB-431C-BF69-8DA4A21F3B05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{506EFD88-4DDB-431C-BF69-8DA4A21F3B05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{506EFD88-4DDB-431C-BF69-8DA4A21F3B05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{506EFD88-4DDB-431C-BF69-8DA4A21F3B05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
