@@ -18,6 +18,7 @@ namespace REghZy.Streams {
         /// </summary>
         private readonly byte[] buffer8 = new byte[8];
 
+        // nullable, for speed reasons. care must be taken to ensure the steam isn't null while in use
         public Stream Stream {
             get => this.stream;
             set => this.stream = value;

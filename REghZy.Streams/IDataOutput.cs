@@ -4,6 +4,10 @@ using System.IO;
 namespace REghZy.Streams {
     /// <summary>
     /// An interface for writing primitive data to a stream
+    /// <para>
+    /// The bytes will be written in the big-endianness format, apart from writing pointer values, which will be
+    /// written in your processor architecture's format, which for modern hardware is little-endianness
+    /// </para>
     /// </summary>
     public interface IDataOutput {
         Stream Stream { get; set; }
@@ -98,7 +102,7 @@ namespace REghZy.Streams {
         void WriteInt(int value);
 
         /// <summary>
-        /// Writes an integer (4 bytes) (0 to 4,294,967,295)
+        /// Writes an unsigned integer (4 bytes) (0 to 4,294,967,295)
         /// </summary>
         /// <param name="value"></param>
         void WriteUInt(uint value);
@@ -110,7 +114,7 @@ namespace REghZy.Streams {
         void WriteLong(long value);
 
         /// <summary>
-        /// Writes a long (8 bytes) (0 to 18,446,744,073,709,551,615)
+        /// Writes an unsigned long (8 bytes) (0 to 18,446,744,073,709,551,615)
         /// </summary>
         /// <param name="value"></param>
         void WriteULong(ulong value);
@@ -183,6 +187,10 @@ namespace REghZy.Streams {
 
         /// <summary>
         /// Writes 'length' bytes from the given pointer (starting, in the pointer, at the given offset)
+        /// <para>
+        /// The data written will be in your processor architecture's endianness, which for modern hardware is little-endianness.
+        /// However, most of the functions in this library write in big-endianness (e.g <see cref="WriteUInt"/>)
+        /// </para>
         /// </summary>
         /// <param name="src">The pointer to a buffer of characters</param>
         /// <param name="offset">The offset within the pointer (usually this starts at 0)</param>
@@ -191,6 +199,10 @@ namespace REghZy.Streams {
 
         /// <summary>
         /// Writes 'length' bytes from the given pointer (starting, in the pointer, at the given offset)
+        /// <para>
+        /// The data written will be in your processor architecture's endianness, which for modern hardware is little-endianness.
+        /// However, most of the functions in this library write in big-endianness (e.g <see cref="WriteUInt"/>)
+        /// </para>
         /// </summary>
         /// <param name="src">The pointer to a buffer of characters</param>
         /// <param name="offset">The offset within the pointer (usually this starts at 0)</param>
@@ -199,6 +211,10 @@ namespace REghZy.Streams {
 
         /// <summary>
         /// Writes a blittable value/object, where all of the value's bytes will be written
+        /// <para>
+        /// The data written will be in your processor architecture's endianness, which for modern hardware is little-endianness.
+        /// However, most of the functions in this library write in big-endianness (e.g <see cref="WriteUInt"/>)
+        /// </para>
         /// </summary>
         /// <param name="value">The value to write</param>
         /// <typeparam name="T">The blittable type</typeparam>

@@ -143,8 +143,10 @@ namespace REghZy.Streams {
             this.stream.Write(b8, 0, 8);
 
             // TODO: use Unsafe.As, because it's IL optimised to do casting
-            // But it does mean this would become low-endianness...
+            // But it does mean this would become low/little-endianness...
             // this.stream.Write(Unsafe.As<ulong, byte[]>(ref value), 0, 8);
+            // could also use pointer stuff, but it would be little-endianness,
+            // at least on most hardware
         }
 
         public void WriteFloat(float value) {
@@ -198,32 +200,37 @@ namespace REghZy.Streams {
             }
             else {
                 byte[] b = this.buffer8;
-                if (len == 3) {
-                    char c1 = value[0];
-                    char c2 = value[1];
-                    char c3 = value[2];
-                    b[0] = (byte) ((c1 >> 8) & 255);
-                    b[1] = (byte) ((c1 >> 0) & 255);
-                    b[2] = (byte) ((c2 >> 8) & 255);
-                    b[3] = (byte) ((c2 >> 0) & 255);
-                    b[4] = (byte) ((c3 >> 8) & 255);
-                    b[5] = (byte) ((c3 >> 0) & 255);
-                    this.stream.Write(b, 0, 6);
-                }
-                else if (len == 2) {
-                    char c1 = value[0];
-                    char c2 = value[1];
-                    b[0] = (byte) ((c1 >> 8) & 255);
-                    b[1] = (byte) ((c1 >> 0) & 255);
-                    b[2] = (byte) ((c2 >> 8) & 255);
-                    b[3] = (byte) ((c2 >> 0) & 255);
-                    this.stream.Write(b, 0, 4);
-                }
-                else if (len == 1) {
-                    char c = value[0];
-                    b[0] = (byte) ((c >> 8) & 255);
-                    b[1] = (byte) ((c >> 0) & 255);
-                    this.stream.Write(b, 0, 2);
+                switch (len) {
+                    case 3: {
+                        char c1 = value[0];
+                        char c2 = value[1];
+                        char c3 = value[2];
+                        b[0] = (byte) ((c1 >> 8) & 255);
+                        b[1] = (byte) ((c1 >> 0) & 255);
+                        b[2] = (byte) ((c2 >> 8) & 255);
+                        b[3] = (byte) ((c2 >> 0) & 255);
+                        b[4] = (byte) ((c3 >> 8) & 255);
+                        b[5] = (byte) ((c3 >> 0) & 255);
+                        this.stream.Write(b, 0, 6);
+                        break;
+                    }
+                    case 2: {
+                        char c1 = value[0];
+                        char c2 = value[1];
+                        b[0] = (byte) ((c1 >> 8) & 255);
+                        b[1] = (byte) ((c1 >> 0) & 255);
+                        b[2] = (byte) ((c2 >> 8) & 255);
+                        b[3] = (byte) ((c2 >> 0) & 255);
+                        this.stream.Write(b, 0, 4);
+                        break;
+                    }
+                    case 1: {
+                        char c = value[0];
+                        b[0] = (byte) ((c >> 8) & 255);
+                        b[1] = (byte) ((c >> 0) & 255);
+                        this.stream.Write(b, 0, 2);
+                        break;
+                    }
                 }
             }
         }
@@ -268,32 +275,37 @@ namespace REghZy.Streams {
             }
             else {
                 byte[] b = this.buffer8;
-                if (len == 3) {
-                    char c1 = chars[0];
-                    char c2 = chars[1];
-                    char c3 = chars[2];
-                    b[0] = (byte) ((c1 >> 8) & 255);
-                    b[1] = (byte) ((c1 >> 0) & 255);
-                    b[2] = (byte) ((c2 >> 8) & 255);
-                    b[3] = (byte) ((c2 >> 0) & 255);
-                    b[4] = (byte) ((c3 >> 8) & 255);
-                    b[5] = (byte) ((c3 >> 0) & 255);
-                    this.stream.Write(b, 0, 6);
-                }
-                else if (len == 2) {
-                    char c1 = chars[0];
-                    char c2 = chars[1];
-                    b[0] = (byte) ((c1 >> 8) & 255);
-                    b[1] = (byte) ((c1 >> 0) & 255);
-                    b[2] = (byte) ((c2 >> 8) & 255);
-                    b[3] = (byte) ((c2 >> 0) & 255);
-                    this.stream.Write(b, 0, 4);
-                }
-                else if (len == 1) {
-                    char c = chars[0];
-                    b[0] = (byte) ((c >> 8) & 255);
-                    b[1] = (byte) ((c >> 0) & 255);
-                    this.stream.Write(b, 0, 2);
+                switch (len) {
+                    case 3: {
+                        char c1 = chars[0];
+                        char c2 = chars[1];
+                        char c3 = chars[2];
+                        b[0] = (byte) ((c1 >> 8) & 255);
+                        b[1] = (byte) ((c1 >> 0) & 255);
+                        b[2] = (byte) ((c2 >> 8) & 255);
+                        b[3] = (byte) ((c2 >> 0) & 255);
+                        b[4] = (byte) ((c3 >> 8) & 255);
+                        b[5] = (byte) ((c3 >> 0) & 255);
+                        this.stream.Write(b, 0, 6);
+                        break;
+                    }
+                    case 2: {
+                        char c1 = chars[0];
+                        char c2 = chars[1];
+                        b[0] = (byte) ((c1 >> 8) & 255);
+                        b[1] = (byte) ((c1 >> 0) & 255);
+                        b[2] = (byte) ((c2 >> 8) & 255);
+                        b[3] = (byte) ((c2 >> 0) & 255);
+                        this.stream.Write(b, 0, 4);
+                        break;
+                    }
+                    case 1: {
+                        char c = chars[0];
+                        b[0] = (byte) ((c >> 8) & 255);
+                        b[1] = (byte) ((c >> 0) & 255);
+                        this.stream.Write(b, 0, 2);
+                        break;
+                    }
                 }
             }
         }
@@ -309,20 +321,22 @@ namespace REghZy.Streams {
             }
             else {
                 byte[] b = this.buffer8;
-                if (len == 3) {
-                    b[0] = (byte) (chars[0] & 255);
-                    b[1] = (byte) (chars[1] & 255);
-                    b[2] = (byte) (chars[2] & 255);
-                    this.stream.Write(b, 0, 3);
-                }
-                else if (len == 2) {
-                    b[0] = (byte) (chars[0] & 255);
-                    b[1] = (byte) (chars[1] & 255);
-                    this.stream.Write(b, 0, 2);
-                }
-                else if (len == 1) {
-                    b[0] = (byte) (chars[0] & 255);
-                    this.stream.Write(b, 0, 1);
+                switch (len) {
+                    case 3:
+                        b[0] = (byte) (chars[0] & 255);
+                        b[1] = (byte) (chars[1] & 255);
+                        b[2] = (byte) (chars[2] & 255);
+                        this.stream.Write(b, 0, 3);
+                        break;
+                    case 2:
+                        b[0] = (byte) (chars[0] & 255);
+                        b[1] = (byte) (chars[1] & 255);
+                        this.stream.Write(b, 0, 2);
+                        break;
+                    case 1:
+                        b[0] = (byte) (chars[0] & 255);
+                        this.stream.Write(b, 0, 1);
+                        break;
                 }
             }
         }
@@ -345,26 +359,28 @@ namespace REghZy.Streams {
                     s.Write(b, 0, 8);
                 }
 
-                if (length == 3) {
-                    bptr[0] = (byte) ((src[offset + 0] >> 8) & 255);
-                    bptr[1] = (byte) ((src[offset + 0] >> 0) & 255);
-                    bptr[2] = (byte) ((src[offset + 1] >> 8) & 255);
-                    bptr[3] = (byte) ((src[offset + 1] >> 0) & 255);
-                    bptr[4] = (byte) ((src[offset + 2] >> 8) & 255);
-                    bptr[5] = (byte) ((src[offset + 2] >> 0) & 255);
-                    s.Write(b, 0, 6);
-                }
-                else if (length == 2) {
-                    bptr[0] = (byte) ((src[offset + 0] >> 8) & 255);
-                    bptr[1] = (byte) ((src[offset + 0] >> 0) & 255);
-                    bptr[2] = (byte) ((src[offset + 1] >> 8) & 255);
-                    bptr[3] = (byte) ((src[offset + 1] >> 0) & 255);
-                    s.Write(b, 0, 4);
-                }
-                else if (length == 1) {
-                    bptr[0] = (byte) ((src[offset] >> 8) & 255);
-                    bptr[1] = (byte) ((src[offset] >> 0) & 255);
-                    s.Write(b, 0, 2);
+                switch (length) {
+                    case 3:
+                        bptr[0] = (byte) ((src[offset + 0] >> 8) & 255);
+                        bptr[1] = (byte) ((src[offset + 0] >> 0) & 255);
+                        bptr[2] = (byte) ((src[offset + 1] >> 8) & 255);
+                        bptr[3] = (byte) ((src[offset + 1] >> 0) & 255);
+                        bptr[4] = (byte) ((src[offset + 2] >> 8) & 255);
+                        bptr[5] = (byte) ((src[offset + 2] >> 0) & 255);
+                        s.Write(b, 0, 6);
+                        break;
+                    case 2:
+                        bptr[0] = (byte) ((src[offset + 0] >> 8) & 255);
+                        bptr[1] = (byte) ((src[offset + 0] >> 0) & 255);
+                        bptr[2] = (byte) ((src[offset + 1] >> 8) & 255);
+                        bptr[3] = (byte) ((src[offset + 1] >> 0) & 255);
+                        s.Write(b, 0, 4);
+                        break;
+                    case 1:
+                        bptr[0] = (byte) ((src[offset] >> 8) & 255);
+                        bptr[1] = (byte) ((src[offset] >> 0) & 255);
+                        s.Write(b, 0, 2);
+                        break;
                 }
             }
         }
@@ -397,20 +413,22 @@ namespace REghZy.Streams {
                     s.Write(b, 0, 4);
                 }
 
-                if (length == 3) {
-                    bptr[0] = (byte) (src[offset + 0] & 255);
-                    bptr[1] = (byte) (src[offset + 1] & 255);
-                    bptr[2] = (byte) (src[offset + 2] & 255);
-                    s.Write(b, 0, 3);
-                }
-                else if (length == 2) {
-                    bptr[0] = (byte) (src[offset + 0] & 255);
-                    bptr[1] = (byte) (src[offset + 1] & 255);
-                    s.Write(b, 0, 2);
-                }
-                else if (length == 1) {
-                    bptr[0] = (byte) (src[offset] & 255);
-                    s.Write(b, 0, 1);
+                switch (length) {
+                    case 3:
+                        bptr[0] = (byte) (src[offset + 0] & 255);
+                        bptr[1] = (byte) (src[offset + 1] & 255);
+                        bptr[2] = (byte) (src[offset + 2] & 255);
+                        s.Write(b, 0, 3);
+                        break;
+                    case 2:
+                        bptr[0] = (byte) (src[offset + 0] & 255);
+                        bptr[1] = (byte) (src[offset + 1] & 255);
+                        s.Write(b, 0, 2);
+                        break;
+                    case 1:
+                        bptr[0] = (byte) (src[offset] & 255);
+                        s.Write(b, 0, 1);
+                        break;
                 }
             }
         }
@@ -435,20 +453,22 @@ namespace REghZy.Streams {
                         s.Write(b, 0, 4);
                     }
 
-                    if (length == 3) {
-                        b[0] = Marshal.ReadByte(src, offset);
-                        b[1] = Marshal.ReadByte(src, offset + 1);
-                        b[2] = Marshal.ReadByte(src, offset + 2);
-                        s.Write(b, 0, 3);
-                    }
-                    else if (length == 2) {
-                        b[0] = Marshal.ReadByte(src, offset);
-                        b[1] = Marshal.ReadByte(src, offset + 1);
-                        s.Write(b, 0, 2);
-                    }
-                    else if (length == 1) {
-                        b[0] = Marshal.ReadByte(src, offset);
-                        s.Write(b, 0, 1);
+                    switch (length) {
+                        case 3:
+                            b[0] = Marshal.ReadByte(src, offset);
+                            b[1] = Marshal.ReadByte(src, offset + 1);
+                            b[2] = Marshal.ReadByte(src, offset + 2);
+                            s.Write(b, 0, 3);
+                            break;
+                        case 2:
+                            b[0] = Marshal.ReadByte(src, offset);
+                            b[1] = Marshal.ReadByte(src, offset + 1);
+                            s.Write(b, 0, 2);
+                            break;
+                        case 1:
+                            b[0] = Marshal.ReadByte(src, offset);
+                            s.Write(b, 0, 1);
+                            break;
                     }
                 }
             }
@@ -472,20 +492,22 @@ namespace REghZy.Streams {
                     s.Write(b, 0, 4);
                 }
 
-                if (length == 3) {
-                    ptr[0] = src[offset + 0];
-                    ptr[1] = src[offset + 1];
-                    ptr[2] = src[offset + 2];
-                    s.Write(b, 0, 3);
-                }
-                else if (length == 2) {
-                    ptr[0] = src[offset + 0];
-                    ptr[1] = src[offset + 1];
-                    s.Write(b, 0, 2);
-                }
-                else if (length == 1) {
-                    ptr[0] = src[offset + 0];
-                    s.Write(b, 0, 1);
+                switch (length) {
+                    case 3:
+                        ptr[0] = src[offset + 0];
+                        ptr[1] = src[offset + 1];
+                        ptr[2] = src[offset + 2];
+                        s.Write(b, 0, 3);
+                        break;
+                    case 2:
+                        ptr[0] = src[offset + 0];
+                        ptr[1] = src[offset + 1];
+                        s.Write(b, 0, 2);
+                        break;
+                    case 1:
+                        ptr[0] = src[offset + 0];
+                        s.Write(b, 0, 1);
+                        break;
                 }
             }
         }

@@ -12,8 +12,6 @@ namespace REghZy.MVVM.Framework.Converters {
                 return DependencyProperty.UnsetValue;
             }
             else {
-                RoutedUICommand e;
-
                 bool hide = false;
                 bool invert = false;
                 if (parameter != null) {

@@ -44,6 +44,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\REghZy.MathsF\REghZy.MathsF.csproj">
+      <Project>{eeffb0e9-fc03-45c8-8e00-131e8b2b71cf}</Project>
+      <Name>REghZy.MathsF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\REghZy.Streams\REghZy.Streams.csproj">
       <Project>{c19b025c-7c9b-493b-a7c5-e133bd504170}</Project>
       <Name>REghZy.Streams</Name>

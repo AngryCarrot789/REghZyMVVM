@@ -4,6 +4,10 @@ using System.IO;
 namespace REghZy.Streams {
     /// <summary>
     /// An interface for reading primitive data from a stream
+    /// <para>
+    /// The bytes will be read in the big-endianness format, apart from reading pointer values, which will be
+    /// read in your processor architecture's format, which for modern hardware is little-endianness
+    /// </para>
     /// </summary>
     public interface IDataInput {
 /// <summary>
@@ -52,7 +56,7 @@ namespace REghZy.Streams {
 
         /// <summary>
         /// Reads 1 byte and converts it to an enum. This requires that the enum type's size is equal to the
-        /// size of a byte, otherwise you may lose the extra data (e.g if the enum's value is above s127/u255),
+        /// size of a byte, otherwise you may lose the extra data (e.g if the enum's value is above 255),
         /// resulting in undefined behaviour
         /// </summary>
         /// <typeparam name="T">The enum type</typeparam>
@@ -183,6 +187,10 @@ namespace REghZy.Streams {
 
         /// <summary>
         /// Reads 'length' number of bytes into the given pointer buffer (starting at the given offset index)
+        /// <para>
+        /// The data read will be in your processor architecture's endianness, which for modern hardware is little-endianness.
+        /// However, most of the functions in this library read in big-endianness (e.g <see cref="ReadUInt"/>)
+        /// </para>
         /// </summary>
         /// <param name="dest">The buffer to write bytes into</param>
         /// <param name="offset">The index of where to start writing into the pointer (inclusive)</param>
@@ -191,6 +199,10 @@ namespace REghZy.Streams {
 
         /// <summary>
         /// Reads 'length' number of bytes into the given pointer (starting at the given offset index)
+        /// <para>
+        /// The data read will be in your processor architecture's endianness, which for modern hardware is little-endianness.
+        /// However, most of the functions in this library read in big-endianness (e.g <see cref="ReadUInt"/>)
+        /// </para>
         /// </summary>
         /// <param name="dest">The pointer which should point to a buffer, which is where bytes will be written to</param>
         /// <param name="offset">The index of where to start writing into the pointer/buffer (inclusive)</param>
@@ -203,6 +215,10 @@ namespace REghZy.Streams {
         /// The number of bytes will be equivalent to the size of the generic unmanaged type passed to the method.
         /// E.g, reading an integer (Int32) will read 4 bytes
         /// </para>
+        /// <para>
+        /// The data read will be in your processor architecture's endianness, which for modern hardware is little-endianness.
+        /// However, most of the functions in this library read in big-endianness (e.g <see cref="ReadUInt"/>)
+        /// </para>
         /// </summary>
         /// <typeparam name="T">The unmanaged type</typeparam>
         T ReadPrimitive<T>() where T : unmanaged;
@@ -212,6 +228,10 @@ namespace REghZy.Streams {
         /// <para>
         /// The number of bytes will be equivalent to the size of the generic unmanaged type passed to the method.
         /// E.g, reading an integer (Int32) will read 4 bytes
+        /// </para>
+        /// <para>
+        /// The data read will be in your processor architecture's endianness, which for modern hardware is little-endianness.
+        /// However, most of the functions in this library read in big-endianness (e.g <see cref="ReadUInt"/>)
         /// </para>
         /// </summary>
         /// <typeparam name="T">The unmanaged type</typeparam>

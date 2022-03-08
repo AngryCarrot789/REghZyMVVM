@@ -111,6 +111,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\REghZy.MathsF\REghZy.MathsF.csproj">
+      <Project>{eeffb0e9-fc03-45c8-8e00-131e8b2b71cf}</Project>
+      <Name>REghZy.MathsF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\REghZy.WPF\REghZy.WPF.csproj">
       <Project>{2d4abfc7-432f-4928-adeb-275d0aac1790}</Project>
       <Name>REghZy.WPF</Name>

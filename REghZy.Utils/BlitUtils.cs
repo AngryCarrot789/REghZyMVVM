@@ -41,7 +41,7 @@ namespace REghZy.Utils {
             }
             
             while (len >= 16) {
-                *(B64*) dest = *(B64*) src;
+                *(B16*) dest = *(B16*) src;
                 dest += 16;
                 src += 16;
                 len -= 16;

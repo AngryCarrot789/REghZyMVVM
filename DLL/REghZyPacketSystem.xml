@@ -49,6 +49,14 @@
             Disconnects and then connects
             </summary>
         </member>
+        <member name="M:REghZyPacketSystem.BaseConnection.Dispose">
+            <summary>
+            Disposes this connection, releasing all resources that it uses
+            <para>
+            This also means it cannot be re-connected to
+            </para>
+            </summary>
+        </member>
         <member name="T:REghZyPacketSystem.Exceptions.DataLossException">
             <summary>
             An exception used to indicate data loss, typically when reading packets
@@ -395,6 +403,16 @@
             </para>
             </summary>
         </member>
+        <member name="F:REghZyPacketSystem.Packeting.Packet.MIN_HEADER_LENGTH">
+            <summary>
+            The absolute minimum size of a packet's header. As of REghZyPacketSystem-2.1, this is 7 bytes
+            </summary>
+        </member>
+        <member name="F:REghZyPacketSystem.Packeting.Packet.MAX_PAYLOAD_LENGTH">
+            <summary>
+            The maximum size of a packet, including the packet header
+            </summary>
+        </member>
         <member name="M:REghZyPacketSystem.Packeting.Packet.Setup">
             <summary>
             Finds all packet classes in all assemblies attributed with <see cref="T:REghZyPacketSystem.Packeting.PacketImplementation"/> and tries to register them
@@ -469,7 +487,7 @@
         </member>
         <member name="P:REghZyPacketSystem.Packeting.PacketImplementation.UseAutoRegister">
             <summary>
-            If true (default value is true), then <see cref="M:REghZyPacketSystem.Packeting.PacketImplementation.TryRegister(System.Type)"/> will be executed once <see cref="M:REghZyPacketSystem.Packeting.Packet.Setup"/> is called
+            If true (default value is true), then the packet will be registered automatically once <see cref="M:REghZyPacketSystem.Packeting.Packet.Setup"/> is called
             <para>
             If this is false, then the packet's static constructor will be executed,
             allowing the packet to be registered in there instead of the auto-registration
@@ -794,10 +812,20 @@
             The connection that this packet system uses
             </summary>
         </member>
-        <member name="P:REghZyPacketSystem.Systems.PacketSystem.SkipConnectionWhenStarting">
+        <member name="P:REghZyPacketSystem.Systems.PacketSystem.IsConnected">
             <summary>
-            Whether to skip calling <see cref="M:REghZyPacketSystem.BaseConnection.Connect"/> when invoking <see cref="M:REghZyPacketSystem.Systems.PacketSystem.Start"/>. This is useful when using
-            socket connections, because certain socket connections cannot be started and stopped on the fly
+            Indicates whether this packet's connection is connected or not
+            <para>
+            Calling <see cref="M:REghZyPacketSystem.Systems.PacketSystem.Start"/> should result in this being <see langword="true"/>
+            </para>
+            <para>
+            Calling <see cref="M:REghZyPacketSystem.Systems.PacketSystem.Stop"/> should result in this being <see langword="false"/>
+            </para>
+            </summary>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.PacketSystem.#ctor(REghZyPacketSystem.BaseConnection)">
+            <summary>
+            Creates a new instance of a packet system
             </summary>
         </member>
         <member name="M:REghZyPacketSystem.Systems.PacketSystem.Start">
@@ -837,12 +865,15 @@
             <param name="count">The number of packets to try and handle</param>
             <returns>
             The number of packets that were handled. This may not be equal to the
-            given number of packets (there weren't enough packets in the queue)
+            given number of packets (e.g there weren't enough packets in the queue)
             </returns>
         </member>
         <member name="M:REghZyPacketSystem.Systems.PacketSystem.ProcessSendQueue(System.Int32)">
             <summary>
-            Writes the given number of packets queued in <see cref="P:REghZyPacketSystem.Systems.PacketSystem.SendQueue"/>
+            <para>
+            If using a <see cref="T:REghZyPacketSystem.Systems.ThreadPacketSystem"/>, this will be invoked by the write thread, so manually
+            calling it isn't strictly necessary. Otherwise, see <see cref="M:REghZyPacketSystem.Systems.PacketSystem.SendPacketImmidiately(REghZyPacketSystem.Packeting.Packet)"/>
+            </para>
             </summary>
             <param name="count">The number of packets to try and write</param>
             <exception cref="T:REghZyPacketSystem.Exceptions.PacketWriteException"></exception>
@@ -868,16 +899,21 @@
         </member>
         <member name="T:REghZyPacketSystem.Systems.ThreadPacketSystem">
             <summary>
-            An extension to the <see cref="T:REghZyPacketSystem.Systems.PacketSystem"/>, using a read and write thread to enqueue packets 
+            An extension to the <see cref="T:REghZyPacketSystem.Systems.PacketSystem"/>, using a read and write thread to enqueue packets
             that have been read from the connection, and to also sending packets to the connection
             <para>
             This prevents the main/important thread from having to wait for packets to be written and read; now it
             just has to process the packets (see below)
             </para>
             <para>
-            This does not poll/process any packets, that must be done manually (because packet handlers/listeners 
+            This does not poll/process any packets, that must be done manually (because packet handlers/listeners
             aren't thread safe), via the <see cref="M:REghZyPacketSystem.Systems.PacketSystem.ProcessReadQueue(System.Int32)"/> method
             </para>
+            </summary>
+        </member>
+        <member name="P:REghZyPacketSystem.Systems.ThreadPacketSystem.Disposed">
+            <summary>
+            Whether this has been disposed or not
             </summary>
         </member>
         <member name="P:REghZyPacketSystem.Systems.ThreadPacketSystem.WriteCount">
@@ -891,13 +927,13 @@
         </member>
         <member name="P:REghZyPacketSystem.Systems.ThreadPacketSystem.CanRead">
             <summary>
-            Sets whether the read thread can run or not. If set to <see langword="false"/>, it will not stop 
+            Sets whether the read thread can run or not. If set to <see langword="false"/>, it will not stop
             the thread, it will simply sit at idle until this becomes <see langword="true"/>
             </summary>
         </member>
         <member name="P:REghZyPacketSystem.Systems.ThreadPacketSystem.CanSend">
             <summary>
-            Sets whether the send/write thread can run or not. If set to <see langword="false"/>, it will not stop 
+            Sets whether the send/write thread can run or not. If set to <see langword="false"/>, it will not stop
             the thread, it will simply sit at idle until this becomes <see langword="true"/>
             </summary>
         </member>
@@ -930,7 +966,7 @@
             </para>
             </summary>
         </member>
-        <member name="E:REghZyPacketSystem.Systems.ThreadPacketSystem.OnPacketReadFailure">
+        <member name="E:REghZyPacketSystem.Systems.ThreadPacketSystem.OnPacketReadError">
             <summary>
             Called when an exception was thrown while reading a packet from the connection
             <para>
@@ -938,7 +974,7 @@
             </para>
             </summary>
         </member>
-        <member name="E:REghZyPacketSystem.Systems.ThreadPacketSystem.OnPacketWriteFailure">
+        <member name="E:REghZyPacketSystem.Systems.ThreadPacketSystem.OnPacketWriteError">
             <summary>
             Called when an exception was thrown while writing a packet to the connection
             <para>
@@ -946,13 +982,18 @@
             </para>
             </summary>
         </member>
+        <member name="E:REghZyPacketSystem.Systems.ThreadPacketSystem.OnReadAvailable">
+            <summary>
+            Called when there are packets available to be read in <see cref="P:REghZyPacketSystem.Systems.PacketSystem.ReadQueue"/>
+            <para>
+            This event will be called from another thread, therefore you must ensure your code is thread safe!
+            </para>
+            </summary>
+        </member>
         <member name="M:REghZyPacketSystem.Systems.ThreadPacketSystem.#ctor(REghZyPacketSystem.BaseConnection,System.Int32)">
             <summary>
             Creates a new instance of the threaded packet system
             </summary>
-            <param name="connection"></param>
-            <param name="handler"></param>
-            <param name="writeCount"></param>
         </member>
         <member name="M:REghZyPacketSystem.Systems.ThreadPacketSystem.Start">
             <summary>
@@ -961,7 +1002,27 @@
         </member>
         <member name="M:REghZyPacketSystem.Systems.ThreadPacketSystem.Stop">
             <summary>
-            Fully stops both the reader and writer threads. They cannot be restarted!
+            Disconnects from the connection, and stops the read and write threads
+            </summary>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.ThreadPacketSystem.PauseThreads">
+            <summary>
+            Sets <see cref="P:REghZyPacketSystem.Systems.ThreadPacketSystem.Paused"/> to true, stopping the threads from reading and writing
+            </summary>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.ThreadPacketSystem.UnpauseThreads">
+            <summary>
+            Sets <see cref="P:REghZyPacketSystem.Systems.ThreadPacketSystem.Paused"/> to false, allowing the threads to read and write again
+            </summary>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.ThreadPacketSystem.Dispose">
+            <summary>
+            Disconnects and kills the threads used with this Threaded packet system
+            </summary>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.ThreadPacketSystem.DoThreadDelay">
+            <summary>
+            Used by the read and write threads to delay them, so that they aren't running at 100% all the time, consuming resources
             </summary>
         </member>
         <member name="T:REghZyPacketSystem.Utils.Enums`1">
