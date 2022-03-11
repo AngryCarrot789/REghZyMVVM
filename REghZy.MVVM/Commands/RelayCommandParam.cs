@@ -17,7 +17,7 @@ namespace REghZy.MVVM.Commands {
         /// <param name="canExecute">The execution status logic.</param>
         public RelayCommandParam(Action<T> execute, Func<bool> canExecute = null) : base(canExecute) {
             if (execute == null) {
-                throw new ArgumentNullException("execute", "Execute callback cannot be null");
+                throw new ArgumentNullException(nameof(execute), "Execute callback cannot be null");
             }
 
             this.execute = execute;

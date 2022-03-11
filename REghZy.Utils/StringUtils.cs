@@ -30,7 +30,7 @@ namespace REghZy.Utils {
         /// <param name="count">The number of times to repeat (and therefore the length of the return string, multiplied by the length of the given string)</param>
         public static string Repeat(this string value, int count) {
             if (value == null) {
-                throw new ArgumentNullException("value", "Value (to repeat) cannot be null");
+                throw new ArgumentNullException(nameof(value), "Value (to repeat) cannot be null");
             }
 
             StringBuilder sb = new StringBuilder(count * value.Length);
@@ -89,10 +89,10 @@ namespace REghZy.Utils {
         /// <exception cref="ArgumentNullException">If any argument is null</exception>
         public static string After(this string str, string value, int startIndex = 0) {
             if (str == null) {
-                throw new ArgumentNullException("str", "String cannot be null");
+                throw new ArgumentNullException(nameof(str), "String cannot be null");
             }
             else if (value == null) {
-                throw new ArgumentNullException("value", "Search value cannot be null");
+                throw new ArgumentNullException(nameof(value), "Search value cannot be null");
             }
             else {
                 int index = str.IndexOf(value, startIndex);
@@ -117,10 +117,10 @@ namespace REghZy.Utils {
         /// <exception cref="ArgumentNullException">If any argument is null</exception>
         public static string Before(this string str, string value, int startIndex = 0) {
             if (str == null) {
-                throw new ArgumentNullException("str", "String cannot be null");
+                throw new ArgumentNullException(nameof(str), "String cannot be null");
             }
             else if (value == null) {
-                throw new ArgumentNullException("value", "Search value cannot be null");
+                throw new ArgumentNullException(nameof(value), "Search value cannot be null");
             }
             else {
                 int index = str.IndexOf(value, startIndex);
@@ -145,13 +145,13 @@ namespace REghZy.Utils {
         /// <exception cref="ArgumentNullException"></exception>
         public static string Between(this string str, string a, string b, int startIndex = 0) {
             if (str == null) {
-                throw new ArgumentNullException("str", "String cannot be null");
+                throw new ArgumentNullException(nameof(str), "String cannot be null");
             }
             else if (a == null) {
-                throw new ArgumentNullException("a", "A value cannot be null");
+                throw new ArgumentNullException(nameof(a), "A value cannot be null");
             }
             else if (b == null) {
-                throw new ArgumentNullException("b", "B value cannot be null");
+                throw new ArgumentNullException(nameof(b), "B value cannot be null");
             }
             else {
                 int indexA = str.IndexOf(a, startIndex);

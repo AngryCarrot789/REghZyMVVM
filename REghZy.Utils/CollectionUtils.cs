@@ -29,10 +29,10 @@ namespace REghZy.Utils {
             // at least, that's how i think branch prediction works in CLR. i think it works like that in machine code,
             // but then again, that's machine code, not CLR code (though CLR can get JIT compiled but anyway)
             if (source == null) {
-                throw new ArgumentNullException("source", "Source enumerable cannot be null");
+                throw new ArgumentNullException(nameof(source), "Source enumerable cannot be null");
             }
             else if (predicate == null) {
-                throw new ArgumentNullException("predicate", "The given predicate cannot be null");
+                throw new ArgumentNullException(nameof(predicate), "The given predicate cannot be null");
             }
             else {
                 foreach (T element in source) {

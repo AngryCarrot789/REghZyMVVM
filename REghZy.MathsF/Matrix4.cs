@@ -2,377 +2,349 @@ using System;
 using System.Runtime.CompilerServices;
 
 namespace REghZy.MathsF {
+    /// <summary>
+    /// A 4x4 float matrix, in row-major order
+    /// <code>
+    ///      _____ Columns _____
+    ///      | M00 M01 M02 M03 |
+    ///      | M10 M11 M12 M13 |
+    /// Rows | M20 M21 M22 M23 |
+    ///      | M30 M31 M32 M33 |
+    ///      |_________________|
+    /// </code>
+    /// </summary>
     public struct Matrix4 {
-        private float M0; private float M1; private float M2; private float M3;
-        private float M4; private float M5; private float M6; private float M7;
-        private float M8; private float M9; private float MA; private float MB;
-        private float MC; private float MD; private float ME; private float MF;
-
-        // 0  1  2  3
-        // 4  5  6  7
-        // 8  9  A  B
-        // C  D  E  F
-
         /// <summary>
-        /// Gets a pointer to the first element in this matrix
+        /// The first element in the matrix. This can be pointed to via pointers in order to use the matrix like a row-major array
         /// </summary>
-        public unsafe float* Pointer => GetPointer(this);
+        public float M00;
+        public float M01;
+        public float M02;
+        public float M03;
+        public float M10;
+        public float M11;
+        public float M12;
+        public float M13;
+        public float M20;
+        public float M21;
+        public float M22;
+        public float M23;
+        public float M30;
+        public float M31;
+        public float M32;
+        public float M33;
 
-        // public static unsafe float* GetPointer(Matrix4 m) => &m.M0;
-
-        public static unsafe float* GetPointer(in Matrix4 matrix) {
-            fixed (float* ptr = &matrix.M0)
-                return ptr;
-        }
-
-        public float this[int i] {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get {
-                switch (i) {
-                    case 0: return this.M0;
-                    case 1: return this.M1;
-                    case 2: return this.M2;
-                    case 3: return this.M3;
-                    case 4: return this.M4;
-                    case 5: return this.M5;
-                    case 6: return this.M6;
-                    case 7: return this.M7;
-                    case 8: return this.M8;
-                    case 9: return this.M9;
-                    case 10: return this.MA;
-                    case 11: return this.MB;
-                    case 12: return this.MC;
-                    case 13: return this.MD;
-                    case 14: return this.ME;
-                    case 15: return this.MF;
-                    default: throw new ArgumentOutOfRangeException(nameof(i), "Index must be between 0 and 15");
-                }
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            set {
-                switch (i) {
-                    case 0: this.M0 = value; return;
-                    case 1: this.M1 = value; return;
-                    case 2: this.M2 = value; return;
-                    case 3: this.M3 = value; return;
-                    case 4: this.M4 = value; return;
-                    case 5: this.M5 = value; return;
-                    case 6: this.M6 = value; return;
-                    case 7: this.M7 = value; return;
-                    case 8: this.M8 = value; return;
-                    case 9: this.M9 = value; return;
-                    case 10: this.MA = value; return;
-                    case 11: this.MB = value; return;
-                    case 12: this.MC = value; return;
-                    case 13: this.MD = value; return;
-                    case 14: this.ME = value; return;
-                    case 15: this.MF = value; return;
-                    default: throw new ArgumentOutOfRangeException(nameof(i), "Index must be between 0 and 15");
-                }
-            }
-        }
+        // Columns; their content goes top to bottom
 
         public Vector4f ColumnX4 {
-            get => new Vector4f(this.M0, this.M4, this.M8, this.MC);
+            get => new Vector4f(this.M00, this.M10, this.M20, this.M30);
             set {
-                this.M0 = value.x;
-                this.M4 = value.y;
-                this.M8 = value.z;
-                this.MC = value.w;
+                this.M00 = value.x;
+                this.M10 = value.y;
+                this.M20 = value.z;
+                this.M30 = value.w;
             }
         }
 
         public Vector4f ColumnY4 {
-            get => new Vector4f(this.M1, this.M5, this.M9, this.MD);
+            get => new Vector4f(this.M01, this.M11, this.M21, this.M31);
             set {
-                this.M1 = value.x;
-                this.M5 = value.y;
-                this.M9 = value.z;
-                this.MD = value.w;
+                this.M01 = value.x;
+                this.M11 = value.y;
+                this.M21 = value.z;
+                this.M31 = value.w;
             }
         }
 
         public Vector4f ColumnZ4 {
-            get => new Vector4f(this.M2, this.M6, this.MA, this.ME);
+            get => new Vector4f(this.M02, this.M12, this.M22, this.M32);
             set {
-                this.M2 = value.x;
-                this.M6 = value.y;
-                this.MA = value.z;
-                this.ME = value.w;
+                this.M02 = value.x;
+                this.M12 = value.y;
+                this.M22 = value.z;
+                this.M32 = value.w;
             }
         }
 
         public Vector4f ColumnW4 {
-            get => new Vector4f(this.M3, this.M7, this.MB, this.MF);
+            get => new Vector4f(this.M03, this.M13, this.M23, this.M33);
             set {
-                this.M3 = value.x;
-                this.M7 = value.y;
-                this.MB = value.z;
-                this.MF = value.w;
+                this.M03 = value.x;
+                this.M13 = value.y;
+                this.M23 = value.z;
+                this.M33 = value.w;
             }
         }
 
         public Vector3f ColumnX {
-            get => new Vector3f(this.M0, this.M4, this.M8);
+            get => new Vector3f(this.M00, this.M10, this.M20);
             set {
-                this.M0 = value.x;
-                this.M4 = value.y;
-                this.M8 = value.z;
+                this.M00 = value.x;
+                this.M10 = value.y;
+                this.M20 = value.z;
             }
         }
 
         public Vector3f ColumnY {
-            get => new Vector3f(this.M1, this.M5, this.M9);
+            get => new Vector3f(this.M01, this.M11, this.M21);
             set {
-                this.M1 = value.x;
-                this.M5 = value.y;
-                this.M9 = value.z;
+                this.M01 = value.x;
+                this.M11 = value.y;
+                this.M21 = value.z;
             }
         }
 
         public Vector3f ColumnZ {
-            get => new Vector3f(this.M2, this.M6, this.MA);
+            get => new Vector3f(this.M02, this.M12, this.M22);
             set {
-                this.M2 = value.x;
-                this.M6 = value.y;
-                this.MA = value.z;
+                this.M02 = value.x;
+                this.M12 = value.y;
+                this.M22 = value.z;
             }
         }
 
         public Vector3f ColumnW {
-            get => new Vector3f(this.M3, this.M7, this.MB);
+            get => new Vector3f(this.M03, this.M13, this.M23);
             set {
-                this.M3 = value.x;
-                this.M7 = value.y;
-                this.MB = value.z;
+                this.M03 = value.x;
+                this.M13 = value.y;
+                this.M23 = value.z;
+            }
+        }
+
+        public Vector4f RowX4 {
+            get => new Vector4f(this.M00, this.M01, this.M02, this.M03);
+            set {
+                this.M00 = value.x;
+                this.M01 = value.y;
+                this.M02 = value.z;
+                this.M03 = value.w;
+            }
+        }
+
+        public Vector4f RowY4 {
+            get => new Vector4f(this.M10, this.M11, this.M12, this.M13);
+            set {
+                this.M10 = value.x;
+                this.M11 = value.y;
+                this.M12 = value.z;
+                this.M13 = value.w;
+            }
+        }
+
+        public Vector4f RowZ4 {
+            get => new Vector4f(this.M20, this.M21, this.M22, this.M23);
+            set {
+                this.M20 = value.x;
+                this.M21 = value.y;
+                this.M22 = value.z;
+                this.M23 = value.w;
+            }
+        }
+
+        public Vector4f RowW4 {
+            get => new Vector4f(this.M30, this.M31, this.M32, this.M33);
+            set {
+                this.M30 = value.x;
+                this.M31 = value.y;
+                this.M32 = value.z;
+                this.M33 = value.w;
+            }
+        }
+
+        public Vector3f RowX {
+            get => new Vector3f(this.M00, this.M01, this.M02);
+            set {
+                this.M00 = value.x;
+                this.M01 = value.y;
+                this.M02 = value.z;
+            }
+        }
+
+        public Vector3f RowY {
+            get => new Vector3f(this.M10, this.M11, this.M12);
+            set {
+                this.M10 = value.x;
+                this.M11 = value.y;
+                this.M12 = value.z;
+            }
+        }
+
+        public Vector3f RowZ {
+            get => new Vector3f(this.M20, this.M21, this.M22);
+            set {
+                this.M20 = value.x;
+                this.M21 = value.y;
+                this.M22 = value.z;
+            }
+        }
+
+        public Vector3f RowW {
+            get => new Vector3f(this.M30, this.M31, this.M32);
+            set {
+                this.M30 = value.x;
+                this.M31 = value.y;
+                this.M32 = value.z;
             }
         }
 
         public Vector3f TranslationPart {
-            get => new Vector3f(this.M3, this.M7, this.MB);
+            get => new Vector3f(this.M03, this.M13, this.M23);
             set {
-                this.M3 = value.x;
-                this.M7 = value.y;
-                this.MB = value.z;
+                this.M03 = value.x;
+                this.M13 = value.y;
+                this.M23 = value.z;
             }
         }
 
         public Vector3f ScalePart {
-            get => new Vector3f(this.M0, this.M5, this.MA);
+            get => new Vector3f(this.M00, this.M11, this.M22);
             set {
-                this.M0 = value.x;
-                this.M5 = value.y;
-                this.MA = value.z;
+                this.M00 = value.x;
+                this.M11 = value.y;
+                this.M22 = value.z;
             }
         }
 
+        /// <summary>
+        /// Returns a matrix where the entire matrix is flipped along the diagonal
+        /// </summary>
+        public Matrix4 Transposed => new Matrix4(
+            this.M00, this.M10, this.M20, this.M30,
+            this.M01, this.M11, this.M21, this.M31,
+            this.M02, this.M12, this.M22, this.M32,
+            this.M03, this.M13, this.M23, this.M33);
+
+        public Matrix4 Inversed => Inverse(this);
+
+        /// <summary>
+        /// Gets or sets a specific element at the given index. This is row-major
+        /// </summary>
+        /// <param name="index">The index (0-15)</param>
+        /// <exception cref="ArgumentOutOfRangeException">The index is below 0 or above 15</exception>
+        public float this[int index] {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get {
+                switch (index) {
+                    case 0x0: return this.M00;
+                    case 0x1: return this.M01;
+                    case 0x2: return this.M02;
+                    case 0x3: return this.M03;
+                    case 0x4: return this.M10;
+                    case 0x5: return this.M11;
+                    case 0x6: return this.M12;
+                    case 0x7: return this.M13;
+                    case 0x8: return this.M20;
+                    case 0x9: return this.M21;
+                    case 0xA: return this.M22;
+                    case 0xB: return this.M23;
+                    case 0xC: return this.M30;
+                    case 0xD: return this.M31;
+                    case 0xE: return this.M32;
+                    case 0xF: return this.M33;
+                    default: throw new ArgumentOutOfRangeException(nameof(index), "Index must be between 0 and 15");
+                }
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            set {
+                switch (index) {
+                    case 0: this.M00 = value; return;
+                    case 1: this.M01 = value; return;
+                    case 2: this.M02 = value; return;
+                    case 3: this.M03 = value; return;
+                    case 4: this.M10 = value; return;
+                    case 5: this.M11 = value; return;
+                    case 6: this.M12 = value; return;
+                    case 7: this.M13 = value; return;
+                    case 8: this.M20 = value; return;
+                    case 9: this.M21 = value; return;
+                    case 10: this.M22 = value; return;
+                    case 11: this.M23 = value; return;
+                    case 12: this.M30 = value; return;
+                    case 13: this.M31 = value; return;
+                    case 14: this.M32 = value; return;
+                    case 15: this.M33 = value; return;
+                    default: throw new ArgumentOutOfRangeException(nameof(index), "Index must be between 0 and 15");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets an element intersecting the specific row and column indexes
+        /// </summary>
+        /// <param name="row">The row (top to bottom)</param>
+        /// <param name="column">The column (left to right)</param>
+        public float this[int row, int column] {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => this[row * 4 + column];
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            set => this[row * 4 + column] = value;
+        }
+
         public Matrix4(in Matrix4 matrix4) {
-            this.M0 = matrix4.M0;
-            this.M1 = matrix4.M1;
-            this.M2 = matrix4.M2;
-            this.M3 = matrix4.M3;
-            this.M4 = matrix4.M4;
-            this.M5 = matrix4.M5;
-            this.M6 = matrix4.M6;
-            this.M7 = matrix4.M7;
-            this.M8 = matrix4.M8;
-            this.M9 = matrix4.M9;
-            this.MA = matrix4.MA;
-            this.MB = matrix4.MB;
-            this.MC = matrix4.MC;
-            this.MD = matrix4.MD;
-            this.ME = matrix4.ME;
-            this.MF = matrix4.MF;
+            this.M00 = matrix4.M00; this.M01 = matrix4.M01; this.M02 = matrix4.M02; this.M03 = matrix4.M03;
+            this.M10 = matrix4.M10; this.M11 = matrix4.M11; this.M12 = matrix4.M12; this.M13 = matrix4.M13;
+            this.M20 = matrix4.M20; this.M21 = matrix4.M21; this.M22 = matrix4.M22; this.M23 = matrix4.M23;
+            this.M30 = matrix4.M30; this.M31 = matrix4.M31; this.M32 = matrix4.M32; this.M33 = matrix4.M33;
+        }
+
+        public Matrix4(float m00, float m01, float m02, float m03,
+                       float m10, float m11, float m12, float m13,
+                       float m20, float m21, float mA, float mB,
+                       float mC, float mD, float mE, float mF) {
+            this.M00 = m00; this.M01 = m01; this.M02 = m02; this.M03 = m03;
+            this.M10 = m10; this.M11 = m11; this.M12 = m12; this.M13 = m13;
+            this.M20 = m20; this.M21 = m21; this.M22 = mA; this.M23 = mB;
+            this.M30 = mC; this.M31 = mD; this.M32 = mE; this.M33 = mF;
         }
 
         public void MakeIdentity() {
-            this.M0 = 1.0f; this.M1 = 0.0f; this.M2 = 0.0f; this.M3 = 0.0f;
-            this.M4 = 0.0f; this.M5 = 1.0f; this.M6 = 0.0f; this.M7 = 0.0f;
-            this.M8 = 0.0f; this.M9 = 0.0f; this.MA = 1.0f; this.MB = 0.0f;
-            this.MC = 0.0f; this.MD = 0.0f; this.ME = 0.0f; this.MF = 1.0f;
+            this.M00 = 1.0f; this.M01 = 0.0f; this.M02 = 0.0f; this.M03 = 0.0f;
+            this.M10 = 0.0f; this.M11 = 1.0f; this.M12 = 0.0f; this.M13 = 0.0f;
+            this.M20 = 0.0f; this.M21 = 0.0f; this.M22 = 1.0f; this.M23 = 0.0f;
+            this.M30 = 0.0f; this.M31 = 0.0f; this.M32 = 0.0f; this.M33 = 1.0f;
         }
 
         public void MakeRotationX(float r) {
             float cosR = (float) Math.Cos(r);
             float sinR = (float) Math.Sin(r);
-            this.M0 = 1.0f; this.M1 = 0.0f; this.M2 = 0.0f;  this.M3 = 0.0f;
-            this.M4 = 0.0f; this.M5 = cosR; this.M6 = -sinR; this.M7 = 0.0f;
-            this.M8 = 0.0f; this.M9 = sinR; this.MA = cosR;  this.MB = 0.0f;
-            this.MC = 0.0f; this.MD = 0.0f; this.ME = 0.0f;  this.MF = 1.0f;
+            this.M00 = 1.0f; this.M01 = 0.0f; this.M02 =  0.0f; this.M03 = 0.0f;
+            this.M10 = 0.0f; this.M11 = cosR; this.M12 = -sinR; this.M13 = 0.0f;
+            this.M20 = 0.0f; this.M21 = sinR; this.M22 =  cosR; this.M23 = 0.0f;
+            this.M30 = 0.0f; this.M31 = 0.0f; this.M32 =  0.0f; this.M33 = 1.0f;
         }
-
         public void MakeRotationY(float r) {
             float cosR = (float) Math.Cos(r);
             float sinR = (float) Math.Sin(r);
-            this.M0 = cosR;  this.M1 = 0.0f; this.M2 = sinR; this.M3 = 0.0f;
-            this.M4 = 0.0f;  this.M5 = 1.0f; this.M6 = 0.0f; this.M7 = 0.0f;
-            this.M8 = -sinR; this.M9 = 0.0f; this.MA = cosR; this.MB = 0.0f;
-            this.MC = 0.0f;  this.MD = 0.0f; this.ME = 0.0f; this.MF = 1.0f;
+            this.M00 = cosR;  this.M01 = 0.0f; this.M02 = sinR; this.M03 = 0.0f;
+            this.M10 = 0.0f;  this.M11 = 1.0f; this.M12 = 0.0f; this.M13 = 0.0f;
+            this.M20 = -sinR; this.M21 = 0.0f; this.M22 = cosR; this.M23 = 0.0f;
+            this.M30 = 0.0f;  this.M31 = 0.0f; this.M32 = 0.0f; this.M33 = 1.0f;
         }
 
         public void MakeRotationZ(float r) {
             float cosR = (float) Math.Cos(r);
             float sinR = (float) Math.Sin(r);
-            this.M0 = cosR; this.M1 = -sinR; this.M2 = 0.0f; this.M3 = 0.0f;
-            this.M4 = sinR; this.M5 = cosR;  this.M6 = 0.0f; this.M7 = 0.0f;
-            this.M8 = 0.0f; this.M9 = 0.0f;  this.MA = 1.0f; this.MB = 0.0f;
-            this.MC = 0.0f; this.MD = 0.0f;  this.ME = 0.0f; this.MF = 1.0f;
-        }
-
-        public void MakeTranslation(in Vector3f v) {
-            this.M0 = 1.0f; this.M1 = 0.0f; this.M2 = 0.0f; this.M3 = v.x;
-            this.M4 = 0.0f; this.M5 = 1.0f; this.M6 = 0.0f; this.M7 = v.y;
-            this.M8 = 0.0f; this.M9 = 0.0f; this.MA = 1.0f; this.MB = v.z;
-            this.MC = 0.0f; this.MD = 0.0f; this.ME = 0.0f; this.MF = 1.0f;
+            this.M00 = cosR; this.M01 = -sinR; this.M02 = 0.0f; this.M03 = 0.0f;
+            this.M10 = sinR; this.M11 = cosR;  this.M12 = 0.0f; this.M13 = 0.0f;
+            this.M20 = 0.0f; this.M21 = 0.0f;  this.M22 = 1.0f; this.M23 = 0.0f;
+            this.M30 = 0.0f; this.M31 = 0.0f;  this.M32 = 0.0f; this.M33 = 1.0f;
         }
 
         public void MakeTranslation(float x, float y, float z) {
-            this.M0 = 1.0f; this.M1 = 0.0f; this.M2 = 0.0f; this.M3 = x;
-            this.M4 = 0.0f; this.M5 = 1.0f; this.M6 = 0.0f; this.M7 = y;
-            this.M8 = 0.0f; this.M9 = 0.0f; this.MA = 1.0f; this.MB = z;
-            this.MC = 0.0f; this.MD = 0.0f; this.ME = 0.0f; this.MF = 1.0f;
-        }
-
-        public void MakeScale(in Vector3f v) {
-            this.M0 = v.x;  this.M1 = 0.0f; this.M2 = 0.0f; this.M3 = 0.0f;
-            this.M4 = 0.0f; this.M5 = v.y;  this.M6 = 0.0f; this.M7 = 0.0f;
-            this.M8 = 0.0f; this.M9 = 0.0f; this.MA = v.z;  this.MB = 0.0f;
-            this.MC = 0.0f; this.MD = 0.0f; this.ME = 0.0f; this.MF = 1.0f;
+            this.M00 = 1.0f; this.M01 = 0.0f; this.M02 = 0.0f; this.M03 = x;
+            this.M10 = 0.0f; this.M11 = 1.0f; this.M12 = 0.0f; this.M13 = y;
+            this.M20 = 0.0f; this.M21 = 0.0f; this.M22 = 1.0f; this.M23 = z;
+            this.M30 = 0.0f; this.M31 = 0.0f; this.M32 = 0.0f; this.M33 = 1.0f;
         }
 
         public void MakeScale(float x, float y, float z) {
-            this.M0 = x;    this.M1 = 0.0f; this.M2 = 0.0f; this.M3 = 0.0f;
-            this.M4 = 0.0f; this.M5 = y;    this.M6 = 0.0f; this.M7 = 0.0f;
-            this.M8 = 0.0f; this.M9 = 0.0f; this.MA = z;    this.MB = 0.0f;
-            this.MC = 0.0f; this.MD = 0.0f; this.ME = 0.0f; this.MF = 1.0f;
-        }
-
-        public Matrix4 Transpose() {
-            Matrix4 n = new Matrix4();
-            n.M0 = this.M0; n.M1 = this.M4; n.M2 = this.M8; n.M3 = this.MC;
-            n.M4 = this.M1; n.M5 = this.M5; n.M6 = this.M9; n.M7 = this.MD;
-            n.M8 = this.M2; n.M9 = this.M6; n.MA = this.MA; n.MB = this.ME;
-            n.MC = this.M3; n.MD = this.M7; n.ME = this.MB; n.MF = this.MF;
-            return n;
-        }
-
-        public static Matrix4 getInverse(in Matrix4 m) {
-            Matrix4 inv = new Matrix4();
-            inv.M0 = m.M5 * m.MA * m.MF -
-                     m.M5 * m.MB * m.ME -
-                     m.M9 * m.M6 * m.MF +
-                     m.M9 * m.M7 * m.ME +
-                     m.MD * m.M6 * m.MB -
-                     m.MD * m.M7 * m.MA;
-
-            inv.M4 = -m.M4 * m.MA * m.MF +
-                     m.M4 * m.MB * m.ME +
-                     m.M8 * m.M6 * m.MF -
-                     m.M8 * m.M7 * m.ME -
-                     m.MC * m.M6 * m.MB +
-                     m.MC * m.M7 * m.MA;
-
-            inv.M8 = m.M4 * m.M9 * m.MF -
-                     m.M4 * m.MB * m.MD -
-                     m.M8 * m.M5 * m.MF +
-                     m.M8 * m.M7 * m.MD +
-                     m.MC * m.M5 * m.MB -
-                     m.MC * m.M7 * m.M9;
-
-            inv.MC = -m.M4 * m.M9 * m.ME +
-                      m.M4 * m.MA * m.MD +
-                      m.M8 * m.M5 * m.ME -
-                      m.M8 * m.M6 * m.MD -
-                      m.MC * m.M5 * m.MA +
-                      m.MC * m.M6 * m.M9;
-
-            inv.M1 = -m.M1 * m.MA * m.MF +
-                     m.M1 * m.MB * m.ME +
-                     m.M9 * m.M2 * m.MF -
-                     m.M9 * m.M3 * m.ME -
-                     m.MD * m.M2 * m.MB +
-                     m.MD * m.M3 * m.MA;
-
-            inv.M5 = m.M0 * m.MA * m.MF -
-                     m.M0 * m.MB * m.ME -
-                     m.M8 * m.M2 * m.MF +
-                     m.M8 * m.M3 * m.ME +
-                     m.MC * m.M2 * m.MB -
-                     m.MC * m.M3 * m.MA;
-
-            inv.M9 = -m.M0 * m.M9 * m.MF +
-                     m.M0 * m.MB * m.MD +
-                     m.M8 * m.M1 * m.MF -
-                     m.M8 * m.M3 * m.MD -
-                     m.MC * m.M1 * m.MB +
-                     m.MC * m.M3 * m.M9;
-
-            inv.MD = m.M0 * m.M9 * m.ME -
-                      m.M0 * m.MA * m.MD -
-                      m.M8 * m.M1 * m.ME +
-                      m.M8 * m.M2 * m.MD +
-                      m.MC * m.M1 * m.MA -
-                      m.MC * m.M2 * m.M9;
-
-            inv.M2 = m.M1 * m.M6 * m.MF -
-                     m.M1 * m.M7 * m.ME -
-                     m.M5 * m.M2 * m.MF +
-                     m.M5 * m.M3 * m.ME +
-                     m.MD * m.M2 * m.M7 -
-                     m.MD * m.M3 * m.M6;
-
-            inv.M6 = -m.M0 * m.M6 * m.MF +
-                     m.M0 * m.M7 * m.ME +
-                     m.M4 * m.M2 * m.MF -
-                     m.M4 * m.M3 * m.ME -
-                     m.MC * m.M2 * m.M7 +
-                     m.MC * m.M3 * m.M6;
-
-            inv.MA = m.M0 * m.M5 * m.MF -
-                      m.M0 * m.M7 * m.MD -
-                      m.M4 * m.M1 * m.MF +
-                      m.M4 * m.M3 * m.MD +
-                      m.MC * m.M1 * m.M7 -
-                      m.MC * m.M3 * m.M5;
-
-            inv.ME = -m.M0 * m.M5 * m.ME +
-                      m.M0 * m.M6 * m.MD +
-                      m.M4 * m.M1 * m.ME -
-                      m.M4 * m.M2 * m.MD -
-                      m.MC * m.M1 * m.M6 +
-                      m.MC * m.M2 * m.M5;
-
-            inv.M3 = -m.M1 * m.M6 * m.MB +
-                     m.M1 * m.M7 * m.MA +
-                     m.M5 * m.M2 * m.MB -
-                     m.M5 * m.M3 * m.MA -
-                     m.M9 * m.M2 * m.M7 +
-                     m.M9 * m.M3 * m.M6;
-
-            inv.M7 = m.M0 * m.M6 * m.MB -
-                     m.M0 * m.M7 * m.MA -
-                     m.M4 * m.M2 * m.MB +
-                     m.M4 * m.M3 * m.MA +
-                     m.M8 * m.M2 * m.M7 -
-                     m.M8 * m.M3 * m.M6;
-
-            inv.MB = -m.M0 * m.M5 * m.MB +
-                      m.M0 * m.M7 * m.M9 +
-                      m.M4 * m.M1 * m.MB -
-                      m.M4 * m.M3 * m.M9 -
-                      m.M8 * m.M1 * m.M7 +
-                      m.M8 * m.M3 * m.M5;
-
-            inv.MF = m.M0 * m.M5 * m.MA -
-                      m.M0 * m.M6 * m.M9 -
-                      m.M4 * m.M1 * m.MA +
-                      m.M4 * m.M2 * m.M9 +
-                      m.M8 * m.M1 * m.M6 -
-                      m.M8 * m.M2 * m.M5;
-
-            float det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
-            return inv / det;
+            this.M00 = x;    this.M01 = 0.0f; this.M02 = 0.0f; this.M03 = 0.0f;
+            this.M10 = 0.0f; this.M11 = y;    this.M12 = 0.0f; this.M13 = 0.0f;
+            this.M20 = 0.0f; this.M21 = 0.0f; this.M22 = z;    this.M23 = 0.0f;
+            this.M30 = 0.0f; this.M31 = 0.0f; this.M32 = 0.0f; this.M33 = 1.0f;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -387,49 +359,76 @@ namespace REghZy.MathsF {
             return matrix4;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Matrix4 RotXYZ(in Vector3f v) {
+            return RotX(v.x) * RotY(v.y) * RotZ(v.z);
+        }
+
+        public static Matrix4 RotZYX(in Vector3f v) {
+            return RotZ(v.z) * RotY(v.y) * RotX(v.x);
+        }
+
+        public static Matrix4 RotXYZ(float x, float y, float z) {
+            return RotX(x) * RotY(y) * RotZ(z);
+        }
+
+        public static Matrix4 RotZYX(float x, float y, float z) {
+            return RotZ(z) * RotY(y) * RotX(x);
+        }
+
+        public static Matrix4 RotX(in Vector3f v) {
+            Matrix4 matrix4 = new Matrix4();
+            matrix4.MakeRotationX(v.x);
+            return matrix4;
+        }
+
         public static Matrix4 RotX(float r) {
             Matrix4 matrix4 = new Matrix4();
             matrix4.MakeRotationX(r);
             return matrix4;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Matrix4 RotY(in Vector3f v) {
+            Matrix4 matrix4 = new Matrix4();
+            matrix4.MakeRotationY(v.y);
+            return matrix4;
+        }
+
         public static Matrix4 RotY(float r) {
             Matrix4 matrix4 = new Matrix4();
             matrix4.MakeRotationY(r);
             return matrix4;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Matrix4 RotZ(in Vector3f v) {
+            Matrix4 matrix4 = new Matrix4();
+            matrix4.MakeRotationZ(v.z);
+            return matrix4;
+        }
+
         public static Matrix4 RotZ(float r) {
             Matrix4 matrix4 = new Matrix4();
             matrix4.MakeRotationZ(r);
             return matrix4;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Matrix4 Translation(in Vector3f v) {
             Matrix4 matrix4 = new Matrix4();
-            matrix4.MakeTranslation(v);
+            matrix4.MakeTranslation(v.x, v.y, v.z);
             return matrix4;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Matrix4 Translation(float x, float y, float z) {
             Matrix4 matrix4 = new Matrix4();
             matrix4.MakeTranslation(x, y, z);
             return matrix4;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Matrix4 Scale(in Vector3f v) {
             Matrix4 matrix4 = new Matrix4();
-            matrix4.MakeScale(v);
+            matrix4.MakeScale(v.x, v.y, v.z);
             return matrix4;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Matrix4 Scale(float x, float y, float z) {
             Matrix4 matrix4 = new Matrix4();
             matrix4.MakeScale(x, y, z);
@@ -437,34 +436,34 @@ namespace REghZy.MathsF {
         }
 
         public Vector3f MultiplyPoint(in Vector3f v) {
-            float w = this.MC * v.x + this.MD * v.y + this.ME * v.z + this.MF;
+            float w = this.M30 * v.x + this.M31 * v.y + this.M32 * v.z + this.M33;
             return new Vector3f(
-                this.M0 * v.x + this.M1 * v.y + this.M2 * v.z + this.M3,
-                this.M4 * v.x + this.M5 * v.y + this.M6 * v.z + this.M7,
-                this.M8 * v.x + this.M9 * v.y + this.MA * v.z + this.MB) * w;
+                this.M00 * v.x + this.M01 * v.y + this.M02 * v.z + this.M03,
+                this.M10 * v.x + this.M11 * v.y + this.M12 * v.z + this.M13,
+                this.M20 * v.x + this.M21 * v.y + this.M22 * v.z + this.M23) * w;
         }
 
         public Vector3f MultiplyDirection(in Vector3f v) {
             return new Vector3f(
-                this.M0 * v.x + this.M1 * v.y + this.M2 * v.z,
-                this.M4 * v.x + this.M5 * v.y + this.M6 * v.z,
-                this.M8 * v.x + this.M9 * v.y + this.MA * v.z);
+                this.M00 * v.x + this.M01 * v.y + this.M02 * v.z,
+                this.M10 * v.x + this.M11 * v.y + this.M12 * v.z,
+                this.M20 * v.x + this.M21 * v.y + this.M22 * v.z);
         }
 
         public static Vector4f operator *(in Matrix4 m, in Vector4f v) {
             return new Vector4f(
-                m.M0  * v.x + m.M1  * v.y + m.M2  * v.z + m.M3  * v.w,
-                m.M4  * v.x + m.M5  * v.y + m.M6  * v.z + m.M7  * v.w,
-                m.M8  * v.x + m.M9  * v.y + m.MA * v.z + m.MB * v.w,
-                m.MC * v.x + m.MD * v.y + m.ME * v.z + m.MF * v.w);
+                m.M00 * v.x + m.M01 * v.y + m.M02 * v.z + m.M03 * v.w,
+                m.M10 * v.x + m.M11 * v.y + m.M12 * v.z + m.M13 * v.w,
+                m.M20 * v.x + m.M21 * v.y + m.M22 * v.z + m.M23 * v.w,
+                m.M30 * v.x + m.M31 * v.y + m.M32 * v.z + m.M33 * v.w);
         }
 
         public static Vector4f operator *(in Matrix4 m, in Vector3f v) {
             return new Vector4f(
-                m.M0  * v.x + m.M1  * v.y + m.M2  * v.z + m.M3,
-                m.M4  * v.x + m.M5  * v.y + m.M6  * v.z + m.M7,
-                m.M8  * v.x + m.M9  * v.y + m.MA * v.z + m.MB,
-                m.MC * v.x + m.MD * v.y + m.ME * v.z + m.MF);
+                m.M00 * v.x + m.M01 * v.y + m.M02 * v.z + m.M03,
+                m.M10 * v.x + m.M11 * v.y + m.M12 * v.z + m.M13,
+                m.M20 * v.x + m.M21 * v.y + m.M22 * v.z + m.M23,
+                m.M30 * v.x + m.M31 * v.y + m.M32 * v.z + m.M33);
         }
 
         public static Matrix4 operator /(in Matrix4 m, float a) {
@@ -477,24 +476,46 @@ namespace REghZy.MathsF {
         }
 
         public static Matrix4 operator *(in Matrix4 m1, in Matrix4 m2) {
-            return new Matrix4 {
-                M0 = m2.M0 * m1.M0 + m2.M4 * m1.M1 + m2.M8 * m1.M2 + m2.MC * m1.M3,
-                M1 = m2.M1 * m1.M0 + m2.M5 * m1.M1 + m2.M9 * m1.M2 + m2.MD * m1.M3,
-                M2 = m2.M2 * m1.M0 + m2.M6 * m1.M1 + m2.MA * m1.M2 + m2.ME * m1.M3,
-                M3 = m2.M3 * m1.M0 + m2.M7 * m1.M1 + m2.MB * m1.M2 + m2.MF * m1.M3,
-                M4 = m2.M0 * m1.M4 + m2.M4 * m1.M5 + m2.M8 * m1.M6 + m2.MC * m1.M7,
-                M5 = m2.M1 * m1.M4 + m2.M5 * m1.M5 + m2.M9 * m1.M6 + m2.MD * m1.M7,
-                M6 = m2.M2 * m1.M4 + m2.M6 * m1.M5 + m2.MA * m1.M6 + m2.ME * m1.M7,
-                M7 = m2.M3 * m1.M4 + m2.M7 * m1.M5 + m2.MB * m1.M6 + m2.MF * m1.M7,
-                M8 = m2.M0 * m1.M8 + m2.M4 * m1.M9 + m2.M8 * m1.MA + m2.MC * m1.MB,
-                M9 = m2.M1 * m1.M8 + m2.M5 * m1.M9 + m2.M9 * m1.MA + m2.MD * m1.MB,
-                MA = m2.M2 * m1.M8 + m2.M6 * m1.M9 + m2.MA * m1.MA + m2.ME * m1.MB,
-                MB = m2.M3 * m1.M8 + m2.M7 * m1.M9 + m2.MB * m1.MA + m2.MF * m1.MB,
-                MC = m2.M0 * m1.MC + m2.M4 * m1.MD + m2.M8 * m1.ME + m2.MC * m1.MF,
-                MD = m2.M1 * m1.MC + m2.M5 * m1.MD + m2.M9 * m1.ME + m2.MD * m1.MF,
-                ME = m2.M2 * m1.MC + m2.M6 * m1.MD + m2.MA * m1.ME + m2.ME * m1.MF,
-                MF = m2.M3 * m1.MC + m2.M7 * m1.MD + m2.MB * m1.ME + m2.MF * m1.MF
-            };
+            return new Matrix4(
+                m2.M00 * m1.M00 + m2.M10 * m1.M01 + m2.M20 * m1.M02 + m2.M30 * m1.M03,
+                m2.M01 * m1.M00 + m2.M11 * m1.M01 + m2.M21 * m1.M02 + m2.M31 * m1.M03,
+                m2.M02 * m1.M00 + m2.M12 * m1.M01 + m2.M22 * m1.M02 + m2.M32 * m1.M03,
+                m2.M03 * m1.M00 + m2.M13 * m1.M01 + m2.M23 * m1.M02 + m2.M33 * m1.M03,
+                m2.M00 * m1.M10 + m2.M10 * m1.M11 + m2.M20 * m1.M12 + m2.M30 * m1.M13,
+                m2.M01 * m1.M10 + m2.M11 * m1.M11 + m2.M21 * m1.M12 + m2.M31 * m1.M13,
+                m2.M02 * m1.M10 + m2.M12 * m1.M11 + m2.M22 * m1.M12 + m2.M32 * m1.M13,
+                m2.M03 * m1.M10 + m2.M13 * m1.M11 + m2.M23 * m1.M12 + m2.M33 * m1.M13,
+                m2.M00 * m1.M20 + m2.M10 * m1.M21 + m2.M20 * m1.M22 + m2.M30 * m1.M23,
+                m2.M01 * m1.M20 + m2.M11 * m1.M21 + m2.M21 * m1.M22 + m2.M31 * m1.M23,
+                m2.M02 * m1.M20 + m2.M12 * m1.M21 + m2.M22 * m1.M22 + m2.M32 * m1.M23,
+                m2.M03 * m1.M20 + m2.M13 * m1.M21 + m2.M23 * m1.M22 + m2.M33 * m1.M23,
+                m2.M00 * m1.M30 + m2.M10 * m1.M31 + m2.M20 * m1.M32 + m2.M30 * m1.M33,
+                m2.M01 * m1.M30 + m2.M11 * m1.M31 + m2.M21 * m1.M32 + m2.M31 * m1.M33,
+                m2.M02 * m1.M30 + m2.M12 * m1.M31 + m2.M22 * m1.M32 + m2.M32 * m1.M33,
+                m2.M03 * m1.M30 + m2.M13 * m1.M31 + m2.M23 * m1.M32 + m2.M33 * m1.M33
+            );
+        }
+
+        public static Matrix4 Inverse(in Matrix4 m) {
+            Matrix4 inv = new Matrix4();
+            inv.M00 =  m.M11 * m.M22 * m.M33 - m.M11 * m.M23 * m.M32 - m.M21 * m.M12 * m.M33 + m.M21 * m.M13 * m.M32 + m.M31 * m.M12 * m.M23 - m.M31 * m.M13 * m.M22;
+            inv.M01 = -m.M01 * m.M22 * m.M33 + m.M01 * m.M23 * m.M32 + m.M21 * m.M02 * m.M33 - m.M21 * m.M03 * m.M32 - m.M31 * m.M02 * m.M23 + m.M31 * m.M03 * m.M22;
+            inv.M02 =  m.M01 * m.M12 * m.M33 - m.M01 * m.M13 * m.M32 - m.M11 * m.M02 * m.M33 + m.M11 * m.M03 * m.M32 + m.M31 * m.M02 * m.M13 - m.M31 * m.M03 * m.M12;
+            inv.M03 = -m.M01 * m.M12 * m.M23 + m.M01 * m.M13 * m.M22 + m.M11 * m.M02 * m.M23 - m.M11 * m.M03 * m.M22 - m.M21 * m.M02 * m.M13 + m.M21 * m.M03 * m.M12;
+            inv.M10 = -m.M10 * m.M22 * m.M33 + m.M10 * m.M23 * m.M32 + m.M20 * m.M12 * m.M33 - m.M20 * m.M13 * m.M32 - m.M30 * m.M12 * m.M23 + m.M30 * m.M13 * m.M22;
+            inv.M11 =  m.M00 * m.M22 * m.M33 - m.M00 * m.M23 * m.M32 - m.M20 * m.M02 * m.M33 + m.M20 * m.M03 * m.M32 + m.M30 * m.M02 * m.M23 - m.M30 * m.M03 * m.M22;
+            inv.M12 = -m.M00 * m.M12 * m.M33 + m.M00 * m.M13 * m.M32 + m.M10 * m.M02 * m.M33 - m.M10 * m.M03 * m.M32 - m.M30 * m.M02 * m.M13 + m.M30 * m.M03 * m.M12;
+            inv.M13 =  m.M00 * m.M12 * m.M23 - m.M00 * m.M13 * m.M22 - m.M10 * m.M02 * m.M23 + m.M10 * m.M03 * m.M22 + m.M20 * m.M02 * m.M13 - m.M20 * m.M03 * m.M12;
+            inv.M20 =  m.M10 * m.M21 * m.M33 - m.M10 * m.M23 * m.M31 - m.M20 * m.M11 * m.M33 + m.M20 * m.M13 * m.M31 + m.M30 * m.M11 * m.M23 - m.M30 * m.M13 * m.M21;
+            inv.M21 = -m.M00 * m.M21 * m.M33 + m.M00 * m.M23 * m.M31 + m.M20 * m.M01 * m.M33 - m.M20 * m.M03 * m.M31 - m.M30 * m.M01 * m.M23 + m.M30 * m.M03 * m.M21;
+            inv.M22 =  m.M00 * m.M11 * m.M33 - m.M00 * m.M13 * m.M31 - m.M10 * m.M01 * m.M33 + m.M10 * m.M03 * m.M31 + m.M30 * m.M01 * m.M13 - m.M30 * m.M03 * m.M11;
+            inv.M23 = -m.M00 * m.M11 * m.M23 + m.M00 * m.M13 * m.M21 + m.M10 * m.M01 * m.M23 - m.M10 * m.M03 * m.M21 - m.M20 * m.M01 * m.M13 + m.M20 * m.M03 * m.M11;
+            inv.M30 = -m.M10 * m.M21 * m.M32 + m.M10 * m.M22 * m.M31 + m.M20 * m.M11 * m.M32 - m.M20 * m.M12 * m.M31 - m.M30 * m.M11 * m.M22 + m.M30 * m.M12 * m.M21;
+            inv.M31 =  m.M00 * m.M21 * m.M32 - m.M00 * m.M22 * m.M31 - m.M20 * m.M01 * m.M32 + m.M20 * m.M02 * m.M31 + m.M30 * m.M01 * m.M22 - m.M30 * m.M02 * m.M21;
+            inv.M32 = -m.M00 * m.M11 * m.M32 + m.M00 * m.M12 * m.M31 + m.M10 * m.M01 * m.M32 - m.M10 * m.M02 * m.M31 - m.M30 * m.M01 * m.M12 + m.M30 * m.M02 * m.M11;
+            inv.M33 =  m.M00 * m.M11 * m.M22 - m.M00 * m.M12 * m.M21 - m.M10 * m.M01 * m.M22 + m.M10 * m.M02 * m.M21 + m.M20 * m.M01 * m.M12 - m.M20 * m.M02 * m.M11;
+            float det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
+            return inv / det;
         }
 
         public static Matrix4 Projection(float vpWidth, float vpHeight, float n, float f, float fov) {
@@ -502,10 +523,10 @@ namespace REghZy.MathsF {
             float a = vpHeight / vpWidth; // aspect ratio
             float d = n - f; // distance between near and far
             Matrix4 mat = new Matrix4();
-            mat.M0 = fr * a; mat.M1 = 0.0f; mat.M2 = 0.0f;        mat.M3 = 0.0f;
-            mat.M4 = 0.0f;   mat.M5 = fr;   mat.M6 = 0.0f;        mat.M7 = 0.0f;
-            mat.M8 = 0.0f;   mat.M9 = 0.0f; mat.MA = (n + f) / d; mat.MB = (2 * n * f) / d;
-            mat.MC = 0.0f;   mat.MD = 0.0f; mat.ME = -1.0f;       mat.MF = 0.0f;
+            mat.M00 = fr * a; mat.M01 = 0.0f; mat.M02 = 0.0f;        mat.M03 = 0.0f;
+            mat.M10 = 0.0f;   mat.M11 = fr;   mat.M12 = 0.0f;        mat.M13 = 0.0f;
+            mat.M20 = 0.0f;   mat.M21 = 0.0f; mat.M22 = (n + f) / d; mat.M23 = (2 * n * f) / d;
+            mat.M30 = 0.0f;   mat.M31 = 0.0f; mat.M32 = -1.0f;       mat.M33 = 0.0f;
             return mat;
         }
 
@@ -521,10 +542,10 @@ namespace REghZy.MathsF {
         /// <returns></returns>
         public static Matrix4 Orthographic(float l, float t, float r, float b, float n, float f) {
             Matrix4 mat = new Matrix4();
-            mat.M0 = 2 / (r - l); mat.M1 = 0.0f;        mat.M2 = 0.0f;         mat.M3 = -(r + l) / (r - l);
-            mat.M4 = 0.0f;        mat.M5 = 2 / (t - b); mat.M6 = 0.0f;         mat.M7 = -(t + b) / (t - b);
-            mat.M8 = 0.0f;        mat.M9 = 0.0f;        mat.MA = -2 / (f - n); mat.MB = -(f + n) / (f - n);
-            mat.MC = 0.0f;        mat.MD = 0.0f;        mat.ME = 0.0f;         mat.MF = 1.0f;
+            mat.M00 = 2 / (r - l); mat.M01 = 0.0f;        mat.M02 = 0.0f;         mat.M03 = -(r + l) / (r - l);
+            mat.M10 = 0.0f;        mat.M11 = 2 / (t - b); mat.M12 = 0.0f;         mat.M13 = -(t + b) / (t - b);
+            mat.M20 = 0.0f;        mat.M21 = 0.0f;        mat.M22 = -2 / (f - n); mat.M23 = -(f + n) / (f - n);
+            mat.M30 = 0.0f;        mat.M31 = 0.0f;        mat.M32 = 0.0f;         mat.M33 = 1.0f;
             return mat;
         }
 
@@ -547,6 +568,18 @@ namespace REghZy.MathsF {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Matrix4 Copy() {
             return new Matrix4(this);
+        }
+
+        public unsafe delegate void PtrCallback(float* ptr);
+
+        /// <summary>
+        /// A helper for accessing a pointer to the first element
+        /// </summary>
+        /// <param name="callback"></param>
+        public unsafe void Pointer(PtrCallback callback) {
+            fixed (float* m = &this.M00) {
+                callback(m);
+            }
         }
     }
 }

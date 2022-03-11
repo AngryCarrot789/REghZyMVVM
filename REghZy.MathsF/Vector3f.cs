@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 
 namespace REghZy.MathsF {
     public struct Vector3f {
@@ -7,7 +8,7 @@ namespace REghZy.MathsF {
         public float z;
 
         public static Vector3f Zero => new Vector3f(0.0f);
-        public static Vector3f One => new Vector3f(1.0f);
+        public static Vector3f One  => new Vector3f(1.0f);
         public static Vector3f UnitX => new Vector3f(1.0f, 0.0f, 0.0f);
         public static Vector3f UnitY => new Vector3f(0.0f, 1.0f, 0.0f);
         public static Vector3f UnitZ => new Vector3f(0.0f, 0.0f, 1.0f);
@@ -45,6 +46,7 @@ namespace REghZy.MathsF {
             this.z = all;
         }
 
+
         public Vector3f(float x, float y, float z) {
             this.x = x;
             this.y = y;
@@ -57,7 +59,7 @@ namespace REghZy.MathsF {
             this.z = vector.z;
         }
 
-        public float Dot(Vector3f b) {
+        public float Dot(in Vector3f b) {
             return this.x * b.x + this.y * b.y + this.z * b.z;
         }
 
@@ -69,23 +71,23 @@ namespace REghZy.MathsF {
             return this.x * this.x + this.y * this.y + this.z * this.z;
         }
 
-        public float Distance(Vector3f o) {
+        public float Distance(in Vector3f o) {
             return (float) Math.Sqrt(FMath.Square(this.x - o.x) + FMath.Square(this.y - o.y) + FMath.Square(this.z - o.z));
         }
 
-        public float DistanceSquared(Vector3f o) {
+        public float DistanceSquared(in Vector3f o) {
             return FMath.Square(this.x - o.x) + FMath.Square(this.y - o.y) + FMath.Square(this.z - o.z);
         }
 
-        public double Angle(Vector3f vec) {
+        public double Angle(in Vector3f vec) {
             return FMath.Acos(Normalise().Dot(vec.Normalise()));
         }
 
-        public Vector3f Midpoint(Vector3f other) {
+        public Vector3f Midpoint(in Vector3f other) {
             return new Vector3f((this.x + other.x) / 2, (this.y + other.y) / 2, (this.z + other.z) / 2);
         }
 
-        public Vector3f Cross(Vector3f b) {
+        public Vector3f Cross(in Vector3f b) {
             return new Vector3f(this.y * b.z - this.z * b.y, this.z * b.x - this.x * b.z, this.x * b.y - this.y * b.x);
         }
 
@@ -94,7 +96,7 @@ namespace REghZy.MathsF {
         }
 
         public float Magnitude() {
-            return (float) Math.Sqrt(MagnitudeSquare());
+            return FMath.Sqrt(MagnitudeSquare());
         }
 
         public void RemoveNAN() {
@@ -118,7 +120,7 @@ namespace REghZy.MathsF {
         }
 
         public Vector3f Normalise() {
-            float mag = this.Magnitude();
+            float mag = FMath.Sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
             return new Vector3f(this.x / mag, this.y / mag, this.z / mag);
         }
 
@@ -197,16 +199,31 @@ namespace REghZy.MathsF {
             return new Vector3f(a.x / b, a.y / b, a.z / b);
         }
 
+        public static bool operator ==(in Vector3f a, in Vector3f b) {
+            return a.x == b.x && a.y == b.y && a.z == b.z;
+        }
+
+        public static bool operator !=(in Vector3f a, in Vector3f b) {
+            return a.x != b.x || a.y != b.y || a.z != b.z;
+        }
+
+        public void Set(float x, float y, float z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
         public bool Equals(in Vector3f other, float tolerance = 0.0001f) {
             return FMath.Abs(this.x - other.x) < tolerance && FMath.Abs(this.y - other.y) < tolerance && FMath.Abs(this.z - other.z) < tolerance;
         }
 
         public override bool Equals(object obj) {
-            return obj is Vector3f other && Equals(other);
+            return obj is Vector3f other && this == other;
         }
 
         public Vector3f Copy() {
-            return new Vector3f(this);
+            // IL code will load "this", then execute ldobj (which performs a value-type copy), and returns that copy
+            return this;
         }
 
         public override string ToString() {

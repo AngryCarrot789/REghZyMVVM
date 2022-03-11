@@ -5,4 +5,8 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DocumentationFile>bin\Release\REghZy.MathsF.xml</DocumentationFile>
+    </PropertyGroup>
+
 </Project>

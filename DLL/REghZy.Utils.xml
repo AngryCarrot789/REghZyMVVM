@@ -4,6 +4,11 @@
         <name>REghZy.Utils</name>
     </assembly>
     <members>
+        <member name="M:REghZy.Utils.Arrays.Fill``1(``0[],``0)">
+            <summary>
+            Fills an array with the given value
+            </summary>
+        </member>
         <member name="M:REghZy.Utils.BlitUtils.LoadString(System.Char*,System.String)">
             <summary>
             Writes the given string to the given pointer
@@ -203,6 +208,11 @@
             </summary>
             <typeparam name="T"></typeparam>
         </member>
+        <member name="P:REghZy.Utils.XmlUserSettings`1.Destination">
+            <summary>
+            The path to use
+            </summary>
+        </member>
         <member name="M:REghZy.Utils.XmlUserSettings`1.#ctor(System.String)">
             <summary>
             Creates a new instance of the XML user settings serialiser
@@ -213,6 +223,32 @@
             <exception cref="T:System.ArgumentNullException">
             Thrown if the properties instance is null, or the file name is null or empty
             </exception>
+        </member>
+        <member name="M:REghZy.Utils.XmlUserSettings`1.#ctor(System.String,System.String)">
+            <summary>
+            Creates a new instance of the XML user settings serialiser
+            </summary>
+            <param name="folder">
+            The name of the folder in which the file will be in (in MyDocuments)
+            </param>
+            <param name="fileName">
+            The name of the file, which will be placed in C:/users/_user_/MyDocuments/REghZY
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if the properties instance is null, or the file name is null or empty
+            </exception>
+        </member>
+        <member name="M:REghZy.Utils.XmlUserSettings`1.Save(`0)">
+            <summary>
+            Saves the given instance to the file
+            </summary>
+            <param name="instance"></param>
+        </member>
+        <member name="M:REghZy.Utils.XmlUserSettings`1.Load">
+            <summary>
+            Loads an instance from the file
+            </summary>
+            <returns></returns>
         </member>
     </members>
 </doc>

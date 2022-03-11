@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading;
 
 namespace REghZy.MVVM.ViewModels {
     /// <summary>
@@ -12,35 +13,25 @@ namespace REghZy.MVVM.ViewModels {
         private static BaseViewModel TARGET;
         private static string TARGET_PROPERTY;
 
-        // static Binder() {
-        //     BINDERS = new Dictionary<BaseViewModel, Dictionary<BaseViewModel, BinderInfo>>();
-        // }
-
-        // private static Dictionary<BaseViewModel, BinderInfo> GetBindersForFrom(BaseViewModel from) {
-        //     Dictionary<BaseViewModel, BinderInfo> dictionary;
-        //     if (!BINDERS.TryGetValue(from, out dictionary)) {
-        //         BINDERS[from] = dictionary = new Dictionary<BaseViewModel, BinderInfo>();
-        //     }
-        //     return dictionary;
-        // }
-
         private static BinderInfo CreateBinder(BaseViewModel obj, string property, BaseViewModel target, string targetProperty) {
-            BinderInfo info = new BinderInfo(obj, property, target, targetProperty);
-            // if (!GetBindersForFrom(obj).TryGetValue(obj, out info)) {
-            //     GetBindersForFrom(obj)[target] = info = new BinderInfo(obj, property, target, targetProperty);
-            // }
+            if (obj == null) {
+                throw new ArgumentNullException(nameof(obj), "View model cannot be null");
+            }
 
-            return info;
+            if (property == null) {
+                throw new ArgumentNullException(nameof(property), "Property cannot be null");
+            }
+
+            if (target == null) {
+                throw new ArgumentNullException(nameof(target), "Target view model cannot be null");
+            }
+
+            if (targetProperty == null) {
+                throw new ArgumentNullException(nameof(targetProperty), "Target property cannot be null");
+            }
+
+            return new BinderInfo(obj, property, target, targetProperty);
         }
-
-        // private static BinderInfo GetBinder(BaseViewModel from, BaseViewModel to) {
-        //     if (BINDERS.TryGetValue(from, out Dictionary<BaseViewModel, BinderInfo> dictionary)) {
-        //         if (dictionary.TryGetValue(to, out BinderInfo binder)) {
-        //             return binder;
-        //         }
-        //     }
-        //     return null;
-        // }
 
         /// <summary>
         /// Binds a property from 'fromObj', and sets the property in 'toObj'
@@ -53,20 +44,6 @@ namespace REghZy.MVVM.ViewModels {
         /// <param name="targetObj"></param>
         /// <param name="targetProperty"></param>
         public static void Bind(BaseViewModel obj, string property, BaseViewModel targetObj, string targetProperty) {
-            // PropertyInfo from = fromObj.GetType().GetProperty(fromProperty);
-            // if (from == null) {
-            //     throw new MissingMemberException(fromObj.GetType().Name, fromProperty);
-            // }
-            // PropertyInfo to = toObj.GetType().GetProperty(toProperty);
-            // if (to == null) {
-            //     throw new MissingMemberException(toObj.GetType().Name, toProperty);
-            // }
-            // fromObj.PropertyChanged += (sender, args) => {
-            //     if (args.PropertyName == fromProperty) {
-            //         to.SetValue(toObj, from.GetValue(fromObj));
-            //     }
-            // };
-
             BinderInfo info = CreateBinder(obj, property, targetObj, targetProperty);
             obj.PropertyChanged += (sender, args) => {
                 if (args.PropertyName == property) {
@@ -108,14 +85,22 @@ namespace REghZy.MVVM.ViewModels {
                     return;
                 }
 
-                lock (BINDER_LOCK) {
+                object locker = BINDER_LOCK;
+                try {
+                    Monitor.Enter(locker);
                     TARGET = this.obj;
                     TARGET_PROPERTY = this.property;
                     this.isBeingSet = true;
                     this.setTarget();
+                }
+                catch (Exception e) {
+                    throw new Exception($"Failed to set target ({this.obj.GetType().Name}::{this.property})", e);
+                }
+                finally {
                     this.isBeingSet = false;
                     TARGET = null;
                     TARGET_PROPERTY = null;
+                    Monitor.Exit(locker);
                 }
             }
         }

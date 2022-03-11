@@ -9,4 +9,8 @@
       <DocumentationFile>bin\Release\REghZy.Collections.xml</DocumentationFile>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\REghZy.Utils\REghZy.Utils.csproj" />
+    </ItemGroup>
+
 </Project>

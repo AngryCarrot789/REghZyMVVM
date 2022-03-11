@@ -24,7 +24,11 @@ namespace REghZy.MVVM.ViewModels {
         /// <param name="propertyName">dont need to specify this, but the name of the property/field</param>
         public void RaisePropertyChanged<T>(ref T property, T newValue, [CallerMemberName] string propertyName = null) {
             if (propertyName == null) {
-                throw new ArgumentNullException("propertyName", "Property Name is null");
+                throw new ArgumentNullException(nameof(propertyName), "Property Name is null");
+            }
+
+            if (EqualityComparer<T>.Default.Equals(property, newValue)) {
+                return;
             }
 
             property = newValue;
@@ -35,12 +39,10 @@ namespace REghZy.MVVM.ViewModels {
         /// Raises a propertychanged event, allowing the view to be updated. Pass in your private property, new value,
         /// can also pass the property name but that's done for you.
         /// </summary>
-        /// <param name="property">The private field that is used for "setting". This can</param>
-        /// <param name="newValue">The new value of this property</param>
         /// <param name="propertyName">dont need to specify this, but the name of the property/field</param>
         public void RaisePropertyChanged([CallerMemberName] string propertyName = null) {
             if (propertyName == null) {
-                throw new ArgumentNullException("propertyName", "Property Name is null");
+                throw new ArgumentNullException(nameof(propertyName), "Property Name is null");
             }
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -54,13 +56,9 @@ namespace REghZy.MVVM.ViewModels {
         /// <param name="property">A reference to the private field, whose value may be replaced with newValue</param>
         /// <param name="newValue">The possible new value of this property</param>
         /// <param name="propertyName">Property name. This will be auto-filled by the compiler</param>
-        public void RaisePropertyChanged<T>(ref T property, T newValue, bool checkEquality, [CallerMemberName] string propertyName = null) {
+        public void RaisePropertyChangedForce<T>(ref T property, T newValue, [CallerMemberName] string propertyName = null) {
             if (propertyName == null) {
-                throw new ArgumentNullException("propertyName", "Property Name is null");
-            }
-
-            if (checkEquality && EqualityComparer<T>.Default.Equals(property, newValue)) {
-                return;
+                throw new ArgumentNullException(nameof(propertyName), "Property Name is null");
             }
 
             property = newValue;
@@ -78,7 +76,11 @@ namespace REghZy.MVVM.ViewModels {
         /// <param name="propertyName">Property name. This will be auto-filled by the compiler</param>
         public void RaisePropertyChangedWithCallback<T>(ref T property, T newValue, Action<T> postChangedCallback = null, Action<T> preChangedCallback = null, [CallerMemberName] string propertyName = null) {
             if (propertyName == null) {
-                throw new ArgumentNullException("propertyName", "Property Name is null");
+                throw new ArgumentNullException(nameof(propertyName), "Property Name is null");
+            }
+
+            if (EqualityComparer<T>.Default.Equals(property, newValue)) {
+                return;
             }
 
             preChangedCallback?.Invoke(property);
@@ -98,7 +100,7 @@ namespace REghZy.MVVM.ViewModels {
         /// <param name="propertyName">Property name. This will be auto-filled by the compiler</param>
         public void RaisePropertyChangedWithCallback(Action callback, [CallerMemberName] string propertyName = null) {
             if (propertyName == null) {
-                throw new ArgumentNullException("propertyName", "Property Name is null");
+                throw new ArgumentNullException(nameof(propertyName), "Property Name is null");
             }
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -116,13 +118,9 @@ namespace REghZy.MVVM.ViewModels {
         /// <param name="postChangedCallback">The method that gets called after the property changed, and contains the new value as a parameter</param>
         /// <param name="preChangedCallback">The method that gets called before the property changed, and contains the old value as a parameter</param>
         /// <param name="propertyName">Property name. This will be auto-filled by the compiler</param>
-        public void RaisePropertyChangedWithCallback<T>(ref T property, T newValue, bool checkEquality, Action<T> postChangedCallback = null, Action<T> preChangedCallback = null, [CallerMemberName] string propertyName = null) {
+        public void RaisePropertyChangedForceWithCallback<T>(ref T property, T newValue, Action<T> postChangedCallback = null, Action<T> preChangedCallback = null, [CallerMemberName] string propertyName = null) {
             if (propertyName == null) {
-                throw new ArgumentNullException("propertyName", "Property Name is null");
-            }
-
-            if (checkEquality && EqualityComparer<T>.Default.Equals(property, newValue)) {
-                return;
+                throw new ArgumentNullException(nameof(propertyName), "Property Name is null");
             }
 
             preChangedCallback?.Invoke(property);
@@ -142,7 +140,11 @@ namespace REghZy.MVVM.ViewModels {
         /// <param name="propertyName">Property name. This will be auto-filled by the compiler</param>
         public void RaisePropertyChangedWithCallback<T>(ref T property, T newValue, Action postChangedCallback = null, Action preChangedCallback = null, [CallerMemberName] string propertyName = null) {
             if (propertyName == null) {
-                throw new ArgumentNullException("propertyName", "Property Name is null");
+                throw new ArgumentNullException(nameof(propertyName), "Property Name is null");
+            }
+
+            if (EqualityComparer<T>.Default.Equals(property, newValue)) {
+                return;
             }
 
             preChangedCallback?.Invoke();
@@ -162,13 +164,9 @@ namespace REghZy.MVVM.ViewModels {
         /// <param name="postChangedCallback">The method that gets called after the property changed, and contains the new value as a parameter</param>
         /// <param name="preChangedCallback">The method that gets called before the property changed, and contains the old value as a parameter</param>
         /// <param name="propertyName">Property name. This will be auto-filled by the compiler</param>
-        public void RaisePropertyChangedWithCallback<T>(ref T property, T newValue, bool checkEquality, Action postChangedCallback = null, Action preChangedCallback = null, [CallerMemberName] string propertyName = null) {
+        public void RaisePropertyChangedForceWithCallback<T>(ref T property, T newValue, Action postChangedCallback = null, Action preChangedCallback = null, [CallerMemberName] string propertyName = null) {
             if (propertyName == null) {
-                throw new ArgumentNullException("propertyName", "Property Name is null");
-            }
-
-            if (checkEquality && EqualityComparer<T>.Default.Equals(property, newValue)) {
-                return;
+                throw new ArgumentNullException(nameof(propertyName), "Property Name is null");
             }
 
             preChangedCallback?.Invoke();

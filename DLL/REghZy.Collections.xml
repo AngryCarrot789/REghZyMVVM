@@ -4,6 +4,103 @@
         <name>REghZy.Collections</name>
     </assembly>
     <members>
+        <member name="T:REghZy.Collections.Dictionaries.LKDEntry`1">
+            <summary>
+            An entry for the long-key dictionary
+            </summary>
+            <typeparam name="V">Value type</typeparam>
+        </member>
+        <member name="T:REghZy.Collections.Dictionaries.LongKeyDictionary`1">
+            <summary>
+            A dictionary that uses a long as a key, while also removing all possibilities of hash collision
+            </summary>
+            <typeparam name="V">The type of value this map contains</typeparam>
+        </member>
+        <member name="P:REghZy.Collections.Dictionaries.LongKeyDictionary`1.Count">
+            <summary>
+            Returns the number of elements in this dictionary
+            </summary>
+        </member>
+        <member name="P:REghZy.Collections.Dictionaries.LongKeyDictionary`1.Item(System.Int64)">
+            <summary>
+            Gets or sets the value for the given key
+            </summary>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">
+            The key was not found while getting a value
+            </exception>
+        </member>
+        <member name="M:REghZy.Collections.Dictionaries.LongKeyDictionary`1.#ctor">
+            <summary>
+            Creates a new long-key dictionary
+            </summary>
+        </member>
+        <member name="M:REghZy.Collections.Dictionaries.LongKeyDictionary`1.PairToHash(System.Int32,System.Int32)">
+            <summary>
+            Efficiently hashes a MSW and LSW
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:REghZy.Collections.Dictionaries.LongKeyDictionary`1.HashToMSW(System.Int64)">
+            <summary>
+            Converts a hash (see <see cref="M:REghZy.Collections.Dictionaries.LongKeyDictionary`1.PairToHash(System.Int32,System.Int32)"/>) to the most significant word; high 4 bytes
+            </summary>
+        </member>
+        <member name="M:REghZy.Collections.Dictionaries.LongKeyDictionary`1.HashToLSW(System.Int64)">
+            <summary>
+            Converts a hash (see <see cref="M:REghZy.Collections.Dictionaries.LongKeyDictionary`1.PairToHash(System.Int32,System.Int32)"/>) to the least significant word; lower 4 bytes
+            </summary>
+        </member>
+        <member name="M:REghZy.Collections.Dictionaries.LongKeyDictionary`1.IsEmpty">
+            <summary>
+            Whether this dictionary is empty or not
+            </summary>
+            <returns>
+            True if there are 0 elements, otherwise false
+            </returns>
+        </member>
+        <member name="M:REghZy.Collections.Dictionaries.LongKeyDictionary`1.ContainsKey(System.Int64)">
+            <summary>
+            Checks if this dictionary contains the given key
+            </summary>
+        </member>
+        <member name="M:REghZy.Collections.Dictionaries.LongKeyDictionary`1.Clear">
+            <summary>
+            Clears this dictionary
+            </summary>
+        </member>
+        <member name="M:REghZy.Collections.Dictionaries.LongKeyDictionary`1.TryGet(System.Int64,`0@)">
+            <summary>
+            Attempts to get a value with the given key
+            </summary>
+            <returns>
+            True if an entry was found, where the value parameter will contain it. False if the key was not found
+            </returns>
+        </member>
+        <member name="M:REghZy.Collections.Dictionaries.LongKeyDictionary`1.Get(System.Int64)">
+            <summary>
+            Gets the value with the given key
+            </summary>
+            <returns></returns>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">
+            The dictionary did not contain the key, or the dictionary is empty
+            </exception>
+        </member>
+        <member name="M:REghZy.Collections.Dictionaries.LongKeyDictionary`1.Put(System.Int64,`0)">
+            <summary>
+            Puts the given value with the given key
+            </summary>
+            <returns>
+            True if an old value was replaced; false if a new entry was added
+            </returns>
+        </member>
+        <member name="M:REghZy.Collections.Dictionaries.LongKeyDictionary`1.Remove(System.Int64)">
+            <summary>
+            Removes an entry with the given key
+            </summary>
+            <returns>
+            True if something was removed. False if nothing was removed; key was not contained
+            </returns>
+        </member>
         <member name="M:REghZy.Collections.Multimaps.BaseMultiMap`2.GetOrCreate(`0)">
             <summary>
             A method that gets, or creates, a value collection for the given key

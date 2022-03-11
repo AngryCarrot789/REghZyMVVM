@@ -43,7 +43,7 @@ namespace REghZy.MathsF {
         public static float Square(float a) => a * a;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double Abs(float a) => (a <= 0.0F) ? 0.0F - a : a;
+        public static float Abs(float a) => (a <= 0.0F) ? 0.0F - a : a;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Round(float a, int b) {
@@ -51,10 +51,10 @@ namespace REghZy.MathsF {
         }
 
         public static float CopySign(float x, float y) {
-            int xbits = Bits.SingleToInt32Bits(x);
-            int ybits = Bits.SingleToInt32Bits(y);
+            int xbits = Bits.FloatBitsToI32(x);
+            int ybits = Bits.FloatBitsToI32(y);
             if ((xbits ^ ybits) < 0) {
-                return Bits.Int32BitsToSingle(xbits ^ int.MinValue);
+                return Bits.I32ToFloatBits(xbits ^ int.MinValue);
             }
 
             return x;

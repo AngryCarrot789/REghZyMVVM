@@ -2,14 +2,13 @@
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using REghzy.MathsF;
 using REghZy.MathsF;
 using REghZy.Streams;
 using REghZy.Utils;
 
 namespace REghZy.MVVM.Test {
     internal class Program {
-        public Matrix4 Mat;
-
         public static byte[] All(int len) {
             byte[] arr = new byte[len];
             for (int i = 0; i < arr.Length; i++) {
@@ -19,16 +18,20 @@ namespace REghZy.MVVM.Test {
             return arr;
         }
 
-        public unsafe Program() {
-            Mat[0] = 5.0f;
-            Mat[1] = 4.0f;
-            Mat[2] = 3.0f;
-            Mat[3] = 2.0f;
-            Mat[4] = 1.0f;
-            Mat.Pointer[0] = 25.0f;
-        }
-
         public static unsafe void Main(string[] args) {
+            Quaternion a = new Quaternion(0.2f, 0.5f, 0.6f, 0.9f);
+            Quaternion b = new Quaternion(0.4f, 0.2f, 0.3f, 0.1f);
+            Vector3f c = a.RotateVector0(new Vector3f(0.5f, 0.9f, 1.3f));
+            Vector3f d = a.RotateVector1(new Vector3f(0.5f, 0.9f, 1.3f));
+
+            Matrix4 m = new Matrix4();
+
+
+            Vector3f vec = new Vector3f(5.0f, 5.0f, 5.0f) * Vector3f.UnitX;
+
+
+
+
             new Program();
 
             MemoryStream stream = new MemoryStream(128);

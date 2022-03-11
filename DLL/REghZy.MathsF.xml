@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>REghZy.MathsF</name>
+    </assembly>
+    <members>
+        <member name="F:REghZy.MathsF.Matrix4.M0">
+            <summary>
+            The first element in the matrix. This can be pointed to via pointers in order to use the matrix like a row-major array
+            </summary>
+        </member>
+        <member name="P:REghZy.MathsF.Matrix4.Transposed">
+            <summary>
+            Returns a matrix where the entire matrix is flipped along the diagonal
+            </summary>
+        </member>
+        <member name="P:REghZy.MathsF.Matrix4.Item(System.Int32)">
+            <summary>
+            Gets or sets a specific element at the given index. This is row-major
+            </summary>
+            <param name="index">The index (0-15)</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">The index is below 0 or above 15</exception>
+        </member>
+        <member name="P:REghZy.MathsF.Matrix4.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets or sets an element intersecting the specific row and column indexes
+            </summary>
+            <param name="row">The row (top to bottom)</param>
+            <param name="column">The column (left to right)</param>
+        </member>
+        <member name="M:REghZy.MathsF.Matrix4.Orthographic(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Orthographic matrix
+            </summary>
+            <param name="l">Left</param>
+            <param name="t">Top</param>
+            <param name="r">Right</param>
+            <param name="b">Bottom</param>
+            <param name="n">Near</param>
+            <param name="f">Far</param>
+            <returns></returns>
+        </member>
+        <member name="M:REghZy.MathsF.Matrix4.Pointer(REghZy.MathsF.Matrix4.PtrCallback)">
+            <summary>
+            A helper for accessing a pointer to the first
+            </summary>
+            <param name="callback"></param>
+        </member>
+    </members>
+</doc>

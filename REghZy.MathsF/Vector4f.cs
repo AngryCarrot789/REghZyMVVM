@@ -151,12 +151,28 @@ namespace REghZy.MathsF {
             return new Vector4f(a.x / b, a.y / b, a.z / b);
         }
 
+        public static bool operator ==(in Vector4f a, in Vector4f b) {
+            return a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w;
+        }
+
+        public static bool operator !=(in Vector4f a, in Vector4f b) {
+            return a.x != b.x || a.y != b.y || a.z != b.z || a.w != b.w;
+        }
+
+        public void Set(float x, float y, float z, float w) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.w = w;
+        }
+
         public bool Equals(Vector4f other, float tolerance = 0.0001f) {
-            return FMath.Abs(this.x - other.x) < tolerance && FMath.Abs(this.y - other.y) < tolerance && FMath.Abs(this.z - other.z) < tolerance && FMath.Abs(this.w - other.w) < tolerance;
+            return FMath.Abs(this.x - other.x) < tolerance && FMath.Abs(this.y - other.y) < tolerance &&
+                   FMath.Abs(this.z - other.z) < tolerance && FMath.Abs(this.w - other.w) < tolerance;
         }
 
         public override bool Equals(object obj) {
-            return obj is Vector4f other && Equals(other);
+            return obj is Vector4f other && this == other;
         }
 
         public Vector4f Copy() {
@@ -164,7 +180,7 @@ namespace REghZy.MathsF {
         }
 
         public override string ToString() {
-            return $"Vector4f({FMath.Round(this.x, 2)}, {FMath.Round(this.y, 2)}, {FMath.Round(this.z, 2)}, {FMath.Round(this.w, 2)})";
+            return $"Vector4f({FMath.Round(this.x, 3)}, {FMath.Round(this.y, 3)}, {FMath.Round(this.z, 3)}, {FMath.Round(this.w, 3)})";
         }
     }
 }
