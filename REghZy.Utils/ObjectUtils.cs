@@ -3,7 +3,7 @@
 namespace REghZy.Utils {
     public static class ObjectUtils {
         /// <summary>
-        /// Copies the given blittable 
+        /// Copies the given blittable type
         /// </summary>
         /// <typeparam name="T">The blittable type</typeparam>
         /// <param name="value">The value to copy</param>

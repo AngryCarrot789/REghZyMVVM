@@ -4,7 +4,24 @@
         <name>REghZy.MathsF</name>
     </assembly>
     <members>
-        <member name="F:REghZy.MathsF.Matrix4.M0">
+        <member name="T:REghZy.MathsF.Matrix4">
+             <summary>
+             A 4x4 float matrix, in row-major order
+             <code>
+                  _____________________
+                  |  __X___Y___Z___W__|
+                  |X| M00 M01 M02 M03 |
+             Rows |Y| M10 M11 M12 M13 |
+                  |Z| M20 M21 M22 M23 |
+                  |W| M30 M31 M32 M33 |
+                  |_|____ Columns ____|
+            
+            
+             Column content goes down, Row content goes right
+             </code>
+             </summary>
+        </member>
+        <member name="F:REghZy.MathsF.Matrix4.M00">
             <summary>
             The first element in the matrix. This can be pointed to via pointers in order to use the matrix like a row-major array
             </summary>
@@ -38,13 +55,30 @@
             <param name="b">Bottom</param>
             <param name="n">Near</param>
             <param name="f">Far</param>
-            <returns></returns>
         </member>
         <member name="M:REghZy.MathsF.Matrix4.Pointer(REghZy.MathsF.Matrix4.PtrCallback)">
             <summary>
-            A helper for accessing a pointer to the first
+            A helper for accessing a pointer to the first element
             </summary>
             <param name="callback"></param>
+        </member>
+        <member name="M:REghzy.MathsF.Quaternion.Slerp(REghzy.MathsF.Quaternion,REghzy.MathsF.Quaternion,System.Single)">
+            <summary>
+            Interpolates between two quaternions, using spherical linear interpolation.
+            </summary>
+            <param name="quaternion1">The first source Quaternion.</param>
+            <param name="quaternion2">The second source Quaternion.</param>
+            <param name="amount">The relative weight of the second source Quaternion in the interpolation.</param>
+            <returns>The interpolated Quaternion.</returns>
+        </member>
+        <member name="M:REghzy.MathsF.Quaternion.Lerp(REghzy.MathsF.Quaternion,REghzy.MathsF.Quaternion,System.Single)">
+            <summary>
+             Linearly interpolates between two quaternions.
+            </summary>
+            <param name="a">The first source Quaternion.</param>
+            <param name="b">The second source Quaternion.</param>
+            <param name="amount">The relative weight of the second source Quaternion in the interpolation.</param>
+            <returns>The interpolated Quaternion.</returns>
         </member>
     </members>
 </doc>

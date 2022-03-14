@@ -1,9 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace REghZy.Utils {
     public static class CollectionUtils {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsEmpty<T>(this ICollection<T> enumerable) {
             return enumerable.Count == 0;
         }

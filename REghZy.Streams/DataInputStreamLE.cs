@@ -9,7 +9,7 @@ namespace REghZy.Streams {
     /// Most method have repeated code for speed reasons...
     /// </para>
     /// </summary>
-    public class DataInputStream : IDataInput {
+    public class DataInputStreamLE : IDataInput {
         private Stream stream;
 
         /// <summary>
@@ -23,11 +23,11 @@ namespace REghZy.Streams {
             set => this.stream = value;
         }
 
-        public DataInputStream(Stream stream) {
+        public DataInputStreamLE(Stream stream) {
             this.stream = stream;
         }
 
-        public DataInputStream(Stream stream, SeekOrigin origin, long offset = 0) {
+        public DataInputStreamLE(Stream stream, SeekOrigin origin, long offset = 0) {
             this.stream = stream;
             stream.Seek(offset, origin);
         }
@@ -112,7 +112,7 @@ namespace REghZy.Streams {
                 throw new EndOfStreamException("Failed to read 2 bytes for a short");
             }
 
-            return (short) ((b[0] << 8) + (b[1] << 0));
+            return (short) (b[0] + (b[1] << 8));
         }
 
         public ushort ReadUShort() {
@@ -121,7 +121,7 @@ namespace REghZy.Streams {
                 throw new EndOfStreamException("Failed to read 2 bytes for a ushort");
             }
 
-            return (ushort) ((b[0] << 8) + (b[1] << 0));
+            return (ushort) (b[0] + (b[1] << 8));
         }
 
         public int ReadInt() {
@@ -130,10 +130,10 @@ namespace REghZy.Streams {
                 throw new EndOfStreamException("Failed to read 4 bytes for a int");
             }
 
-            return (int) (((uint) b[0] << 24) +
-                          ((uint) b[1] << 16) +
-                          ((uint) b[2] << 8) +
-                          ((uint) b[3] << 0));
+            return (int) (((uint) b[0] << 0) +
+                          ((uint) b[1] << 8) +
+                          ((uint) b[2] << 16) +
+                          ((uint) b[3] << 24));
         }
 
         public uint ReadUInt() {
@@ -142,10 +142,12 @@ namespace REghZy.Streams {
                 throw new EndOfStreamException("Failed to read 4 bytes for a uint");
             }
 
-            return ((uint) b[0] << 24) +
-                   ((uint) b[1] << 16) +
-                   ((uint) b[2] << 8) +
-                   ((uint) b[3] << 0);
+            this.buffer8[9] = 6;
+
+            return ((uint) b[0] << 0) +
+                   ((uint) b[1] << 8) +
+                   ((uint) b[2] << 16) +
+                   ((uint) b[3] << 24);
         }
 
         public long ReadLong() {
@@ -154,14 +156,7 @@ namespace REghZy.Streams {
                 throw new EndOfStreamException("Failed to read 8 bytes for a long");
             }
 
-            return (long) (((ulong) bArr8[0] << 56) +
-                           ((ulong) bArr8[1] << 48) +
-                           ((ulong) bArr8[2] << 40) +
-                           ((ulong) bArr8[3] << 32) +
-                           ((ulong) bArr8[4] << 24) +
-                           ((ulong) bArr8[5] << 16) +
-                           ((ulong) bArr8[6] << 8) +
-                           ((ulong) bArr8[7] << 0));
+            return ReadPrimitive<long>(0);
         }
 
         public ulong ReadULong() {
@@ -170,14 +165,7 @@ namespace REghZy.Streams {
                 throw new EndOfStreamException("Failed to read 8 bytes for a ulong");
             }
 
-            return ((ulong) b[0] << 56) +
-                   ((ulong) b[1] << 48) +
-                   ((ulong) b[2] << 40) +
-                   ((ulong) b[3] << 32) +
-                   ((ulong) b[4] << 24) +
-                   ((ulong) b[5] << 16) +
-                   ((ulong) b[6] << 8) +
-                   ((ulong) b[7] << 0);
+            return ReadPrimitive<ulong>(0);
         }
 
         public float ReadFloat() {
@@ -187,10 +175,10 @@ namespace REghZy.Streams {
             }
 
             unsafe {
-                uint p0 = ((uint) b[0] << 24) +
-                          ((uint) b[1] << 16) +
-                          ((uint) b[2] << 8) +
-                          ((uint) b[3] << 0);
+                uint p0 = ((uint) b[0] << 0) +
+                          ((uint) b[1] << 8) +
+                          ((uint) b[2] << 16) +
+                          ((uint) b[3] << 24);
                 return *(float*) &p0;
             }
         }
@@ -202,14 +190,8 @@ namespace REghZy.Streams {
             }
 
             unsafe {
-                ulong p0 = ((ulong) b[0] << 56) +
-                           ((ulong) b[1] << 48) +
-                           ((ulong) b[2] << 40) +
-                           ((ulong) b[3] << 32) +
-                           ((ulong) b[4] << 24) +
-                           ((ulong) b[5] << 16) +
-                           ((ulong) b[6] << 8) +
-                           ((ulong) b[7] << 0);
+                ulong p0 = 0;
+                ReadPtr((byte*) &p0, 0, 8);
                 return *(double*) &p0;
             }
         }
@@ -220,7 +202,7 @@ namespace REghZy.Streams {
                 throw new EndOfStreamException("Failed to read 2 bytes for a char");
             }
 
-            return (char) (ushort) ((b[0] << 8) + (b[1] << 0));
+            return (char) (ushort) ((b[0] << 0) + (b[1] << 8));
         }
 
         public char ReadCharUTF8() {
@@ -257,10 +239,10 @@ namespace REghZy.Streams {
                                 throw new EndOfStreamException($"Failed to read 8 bytes for 4 chars ({length} bytes remaining, read {i} so far)");
                             }
 
-                            cptr[i + 0] = (char) (ushort) ((b[0] << 8) + (b[1] << 0));
-                            cptr[i + 1] = (char) (ushort) ((b[2] << 8) + (b[3] << 0));
-                            cptr[i + 2] = (char) (ushort) ((b[4] << 8) + (b[5] << 0));
-                            cptr[i + 3] = (char) (ushort) ((b[6] << 8) + (b[7] << 0));
+                            cptr[i + 0] = (char) (ushort) ((b[0] << 0) + (b[1] << 8));
+                            cptr[i + 1] = (char) (ushort) ((b[2] << 0) + (b[3] << 8));
+                            cptr[i + 2] = (char) (ushort) ((b[4] << 0) + (b[5] << 8));
+                            cptr[i + 3] = (char) (ushort) ((b[6] << 0) + (b[7] << 8));
                             length -= 4;
                             i += 4;
                         }
@@ -270,24 +252,24 @@ namespace REghZy.Streams {
                                 throw new EndOfStreamException($"Failed to read 6 bytes for 3 chars ({length} bytes remaining, last 3 chars, read {i} so far)");
                             }
 
-                            cptr[i + 0] = (char) (ushort) ((b[0] << 8) + (b[1] << 0));
-                            cptr[i + 1] = (char) (ushort) ((b[2] << 8) + (b[3] << 0));
-                            cptr[i + 2] = (char) (ushort) ((b[4] << 8) + (b[5] << 0));
+                            cptr[i + 0] = (char) (ushort) ((b[0] << 0) + (b[1] << 8));
+                            cptr[i + 1] = (char) (ushort) ((b[2] << 0) + (b[3] << 8));
+                            cptr[i + 2] = (char) (ushort) ((b[4] << 0) + (b[5] << 8));
                         }
                         else if (length == 2) {
                             if (s.Read(b, 0, 4) != 4) {
                                 throw new EndOfStreamException($"Failed to read 4 bytes for 2 chars ({length} bytes remaining, last 2 chars, read {i} so far)");
                             }
 
-                            cptr[i + 0] = (char) (ushort) ((b[0] << 8) + (b[1] << 0));
-                            cptr[i + 1] = (char) (ushort) ((b[2] << 8) + (b[3] << 0));
+                            cptr[i + 0] = (char) (ushort) ((b[0] << 0) + (b[1] << 8));
+                            cptr[i + 1] = (char) (ushort) ((b[2] << 0) + (b[3] << 8));
                         }
                         else if (length == 1) {
                             if (s.Read(b, 0, 2) != 2) {
                                 throw new EndOfStreamException($"Failed to read 2 bytes for 1 char ({length} bytes remaining, last 1 char, read {i} so far)");
                             }
 
-                            cptr[i] = (char) (ushort) ((b[0] << 8) + (b[1] << 0));
+                            cptr[i] = (char) (ushort) ((b[0] << 0) + (b[1] << 8));
                         }
 
                         return chars;
@@ -298,9 +280,9 @@ namespace REghZy.Streams {
                         throw new EndOfStreamException("Failed to read 6 bytes for 3 chars (in string len 3)");
                     }
 
-                    chars[0] = (char) (ushort) ((b[0] << 8) + (b[1] << 0));
-                    chars[1] = (char) (ushort) ((b[2] << 8) + (b[3] << 0));
-                    chars[2] = (char) (ushort) ((b[4] << 8) + (b[5] << 0));
+                    chars[0] = (char) (ushort) ((b[0] << 0) + (b[1] << 8));
+                    chars[1] = (char) (ushort) ((b[2] << 0) + (b[3] << 8));
+                    chars[2] = (char) (ushort) ((b[4] << 0) + (b[5] << 8));
                     return chars;
                 }
                 else if (length == 2) {
@@ -308,8 +290,8 @@ namespace REghZy.Streams {
                         throw new EndOfStreamException("Failed to read 4 bytes for 2 chars (in string len 2)");
                     }
 
-                    chars[0] = (char) (ushort) ((b[0] << 8) + (b[1] << 0));
-                    chars[1] = (char) (ushort) ((b[2] << 8) + (b[3] << 0));
+                    chars[0] = (char) (ushort) ((b[0] << 0) + (b[1] << 8));
+                    chars[1] = (char) (ushort) ((b[2] << 0) + (b[3] << 8));
                     return chars;
                 }
                 else if (length == 1) {
@@ -317,7 +299,7 @@ namespace REghZy.Streams {
                         throw new EndOfStreamException("Failed to read 2 bytes for a char (in string len 1)");
                     }
 
-                    chars[0] = (char) (ushort) ((b[0] << 8) + (b[1] << 0));
+                    chars[0] = (char) (ushort) ((b[0] << 0) + (b[1] << 8));
                     return chars;
                 }
                 else {
@@ -437,85 +419,83 @@ namespace REghZy.Streams {
         public unsafe void ReadPtr(byte* dest, int offset, int length) {
             byte[] b = this.buffer8;
             Stream s = this.stream;
-            fixed (byte* buf = b) {
-                while (length > 7) {
-                    if (s.Read(b, 0, 8) != 8) {
-                        throw new EndOfStreamException($"Failed to read 8 bytes for 8 chars ({length} bytes remaining)");
+            if (length > 3) {
+                fixed (byte* buf = b) {
+                    while (length > 7) {
+                        if (s.Read(b, 0, 8) != 8) {
+                            throw new EndOfStreamException($"Failed to read 8 bytes for 8 chars ({length} bytes remaining)");
+                        }
+
+                        *(ulong*) (dest + offset) = *(ulong*) buf;
+                        length -= 8;
+                        offset += 8;
                     }
 
-                    *(ulong*) (dest + offset) = *(ulong*) buf;
-                    length -= 8;
-                    offset += 8;
-                }
+                    if (length > 3) {
+                        if (s.Read(b, 0, 4) != 4) {
+                            throw new EndOfStreamException($"Failed to read 4 bytes for 4 chars ({length} bytes remaining)");
+                        }
 
-                if (length > 3) {
-                    if (s.Read(b, 0, 4) != 4) {
-                        throw new EndOfStreamException($"Failed to read 4 bytes for 4 chars ({length} bytes remaining)");
+                        *(uint*) (dest + offset) = *(uint*) buf;
+                        length -= 4;
+                        offset += 4;
                     }
+                }
+            }
 
-                    *(uint*) (dest + offset) = *(uint*) buf;
-                    length -= 4;
-                    offset += 4;
+            if (length == 3) {
+                if (s.Read(b, 0, 3) != 3) {
+                    throw new EndOfStreamException($"Failed to read 3 bytes for 3 chars ({length} bytes remaining, last 3 chars)");
                 }
 
-                if (length == 3) {
-                    if (s.Read(b, 0, 3) != 3) {
-                        throw new EndOfStreamException($"Failed to read 3 bytes for 3 chars ({length} bytes remaining, last 3 chars)");
-                    }
-
-                    dest[offset + 0] = buf[0];
-                    dest[offset + 1] = buf[1];
-                    dest[offset + 2] = buf[2];
+                dest[offset + 0] = b[0];
+                dest[offset + 1] = b[1];
+                dest[offset + 2] = b[2];
+            }
+            else if (length == 2) {
+                if (s.Read(b, 0, 2) != 2) {
+                    throw new EndOfStreamException($"Failed to read 2 bytes for 2 chars ({length} bytes remaining, last 2 chars)");
                 }
-                else if (length == 2) {
-                    if (s.Read(b, 0, 2) != 2) {
-                        throw new EndOfStreamException($"Failed to read 2 bytes for 2 chars ({length} bytes remaining, last 2 chars)");
-                    }
 
-                    dest[offset + 0] = buf[0];
-                    dest[offset + 1] = buf[1];
+                dest[offset + 0] = b[0];
+                dest[offset + 1] = b[1];
+            }
+            else if (length == 1) {
+                if (s.Read(b, 0, 1) != 1) {
+                    throw new EndOfStreamException($"Failed to read 1 byte for 1 char ({length} bytes remaining, last 1 char)");
                 }
-                else if (length == 1) {
-                    if (s.Read(b, 0, 1) != 1) {
-                        throw new EndOfStreamException($"Failed to read 1 byte for 1 char ({length} bytes remaining, last 1 char)");
-                    }
 
-                    dest[offset] = buf[0];
-                }
+                dest[offset] = b[0];
             }
         }
 
         public void ReadPtr(IntPtr dest, int offset, int length) {
             byte[] b = this.buffer8;
             Stream s = this.stream;
-            while (length > 7) {
-                if (s.Read(b, 0, 8) != 8) {
-                    throw new EndOfStreamException($"Failed to read 8 bytes for 8 chars ({length} bytes remaining)");
-                }
-
-                Marshal.WriteInt64(dest, offset, (long) (((ulong) b[0] << 56) +
-                                                         ((ulong) b[1] << 48) +
-                                                         ((ulong) b[2] << 40) +
-                                                         ((ulong) b[3] << 32) +
-                                                         ((ulong) b[4] << 24) +
-                                                         ((ulong) b[5] << 16) +
-                                                         ((ulong) b[6] << 8) +
-                                                         ((ulong) b[7] << 0)));
-                length -= 8;
-                offset += 8;
-            }
-
             if (length > 3) {
-                if (s.Read(b, 0, 4) != 4) {
-                    throw new EndOfStreamException($"Failed to read 4 bytes for 4 chars ({length} bytes remaining)");
-                }
+                unsafe {
+                    fixed (byte* ptr = b) {
+                        while (length > 7) {
+                            if (s.Read(b, 0, 8) != 8) {
+                                throw new EndOfStreamException($"Failed to read 8 bytes for 8 chars ({length} bytes remaining)");
+                            }
 
-                Marshal.WriteInt32(dest, offset, (int) (((uint) b[0] << 24) +
-                                                        ((uint) b[1] << 16) +
-                                                        ((uint) b[2] << 8) +
-                                                        ((uint) b[3] << 0)));
-                length -= 4;
-                offset += 4;
+                            Marshal.WriteInt64(dest, offset, *(long*) ptr);
+                            length -= 8;
+                            offset += 8;
+                        }
+
+                        if (length > 3) {
+                            if (s.Read(b, 0, 4) != 4) {
+                                throw new EndOfStreamException($"Failed to read 4 bytes for 4 chars ({length} bytes remaining)");
+                            }
+
+                            Marshal.WriteInt32(dest, offset, *(int*) ptr);
+                            length -= 4;
+                            offset += 4;
+                        }
+                    }
+                }
             }
 
             if (length == 3) {

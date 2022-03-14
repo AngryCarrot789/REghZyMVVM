@@ -10,6 +10,9 @@ namespace REghZy.Streams {
     /// </para>
     /// </summary>
     public interface IDataOutput {
+        /// <summary>
+        /// The base stream that this data output will write to
+        /// </summary>
         Stream Stream { get; set; }
 
         /// <summary>

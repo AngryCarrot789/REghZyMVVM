@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,41 +12,36 @@ namespace REghZy.Streams {
     /// </para>
     /// </summary>
     public class BlockingStream : Stream {
-        private Stream stream;
+        private readonly Stream stream;
 
         /// <summary>
         /// The underlying stream of this blocking stream
         /// </summary>
-        public Stream Stream {
-            get => this.stream;
-            set => this.stream = value;
-        }
+        public Stream Stream => this.stream;
 
-        public override bool CanRead => stream.CanRead;
+        public override bool CanRead => this.stream.CanRead;
 
-        public override bool CanSeek => stream.CanSeek;
+        public override bool CanSeek => this.stream.CanSeek;
 
-        public override bool CanWrite => stream.CanWrite;
+        public override bool CanWrite => this.stream.CanWrite;
 
-        public override long Length => stream.Length;
+        public override long Length => this.stream.Length;
 
         public override long Position {
-            get => stream.Position;
-            set => stream.Position = value;
+            get => this.stream.Position;
+            set => this.stream.Position = value;
         }
 
-        public override bool CanTimeout {
-            get => stream.CanTimeout;
-        }
+        public override bool CanTimeout => this.stream.CanTimeout;
 
         public override int ReadTimeout {
-            get => stream.ReadTimeout;
-            set => stream.ReadTimeout = value;
+            get => this.stream.ReadTimeout;
+            set => this.stream.ReadTimeout = value;
         }
 
         public override int WriteTimeout {
-            get => stream.WriteTimeout;
-            set => stream.WriteTimeout = value;
+            get => this.stream.WriteTimeout;
+            set => this.stream.WriteTimeout = value;
         }
 
         /// <summary>
@@ -68,13 +63,7 @@ namespace REghZy.Streams {
             this.stream = stream;
         }
 
-        /// <summary>
-        /// Creates a new instance of the blocking stream, without an underlying stream (it can be set after the constructor)
-        /// </summary>
-        public BlockingStream() {
-            
-        }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override void Flush() {
             this.stream.Flush();
         }
@@ -109,60 +98,74 @@ namespace REghZy.Streams {
             return b[0];
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override long Seek(long offset, SeekOrigin origin) {
-            return stream.Seek(offset, origin);
+            return this.stream.Seek(offset, origin);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override void SetLength(long value) {
-            stream.SetLength(value);
+            this.stream.SetLength(value);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override void Write(byte[] buffer, int offset, int count) {
-            stream.Write(buffer, offset, count);
+            this.stream.Write(buffer, offset, count);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override void Dispose(bool disposing) {
             this.stream.Dispose();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state) {
-            return stream.BeginRead(buffer, offset, count, callback, state);
+            return this.stream.BeginRead(buffer, offset, count, callback, state);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, object state) {
-            return stream.BeginWrite(buffer, offset, count, callback, state);
+            return this.stream.BeginWrite(buffer, offset, count, callback, state);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override void Close() {
-            stream.Close();
+            this.stream.Close();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Task CopyToAsync(Stream destination, int bufferSize, CancellationToken cancellationToken) {
-            return stream.CopyToAsync(destination, bufferSize, cancellationToken);
+            return this.stream.CopyToAsync(destination, bufferSize, cancellationToken);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int EndRead(IAsyncResult asyncResult) {
-            return stream.EndRead(asyncResult);
+            return this.stream.EndRead(asyncResult);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override void EndWrite(IAsyncResult asyncResult) {
-            stream.EndWrite(asyncResult);
+            this.stream.EndWrite(asyncResult);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Task FlushAsync(CancellationToken cancellationToken) {
-            return stream.FlushAsync(cancellationToken);
+            return this.stream.FlushAsync(cancellationToken);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) {
-            return stream.ReadAsync(buffer, offset, count, cancellationToken);
+            return this.stream.ReadAsync(buffer, offset, count, cancellationToken);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) {
-            return stream.WriteAsync(buffer, offset, count, cancellationToken);
+            return this.stream.WriteAsync(buffer, offset, count, cancellationToken);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override void WriteByte(byte value) {
-            stream.WriteByte(value);
+            this.stream.WriteByte(value);
         }
 
         public override string ToString() {

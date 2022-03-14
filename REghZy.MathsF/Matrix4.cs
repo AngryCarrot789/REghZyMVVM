@@ -5,34 +5,26 @@ namespace REghZy.MathsF {
     /// <summary>
     /// A 4x4 float matrix, in row-major order
     /// <code>
-    ///      _____ Columns _____
-    ///      | M00 M01 M02 M03 |
-    ///      | M10 M11 M12 M13 |
-    /// Rows | M20 M21 M22 M23 |
-    ///      | M30 M31 M32 M33 |
-    ///      |_________________|
+    ///      _____________________
+    ///      |  __X___Y___Z___W__|
+    ///      |X| M00 M01 M02 M03 |
+    /// Rows |Y| M10 M11 M12 M13 |
+    ///      |Z| M20 M21 M22 M23 |
+    ///      |W| M30 M31 M32 M33 |
+    ///      |_|____ Columns ____|
+    ///
+    ///
+    /// Column content goes down, Row content goes right
     /// </code>
     /// </summary>
     public struct Matrix4 {
         /// <summary>
         /// The first element in the matrix. This can be pointed to via pointers in order to use the matrix like a row-major array
         /// </summary>
-        public float M00;
-        public float M01;
-        public float M02;
-        public float M03;
-        public float M10;
-        public float M11;
-        public float M12;
-        public float M13;
-        public float M20;
-        public float M21;
-        public float M22;
-        public float M23;
-        public float M30;
-        public float M31;
-        public float M32;
-        public float M33;
+        public float M00; public float M01; public float M02; public float M03;
+        public float M10; public float M11; public float M12; public float M13;
+        public float M20; public float M21; public float M22; public float M23;
+        public float M30; public float M31; public float M32; public float M33;
 
         // Columns; their content goes top to bottom
 
@@ -249,22 +241,22 @@ namespace REghZy.MathsF {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set {
                 switch (index) {
-                    case 0: this.M00 = value; return;
-                    case 1: this.M01 = value; return;
-                    case 2: this.M02 = value; return;
-                    case 3: this.M03 = value; return;
-                    case 4: this.M10 = value; return;
-                    case 5: this.M11 = value; return;
-                    case 6: this.M12 = value; return;
-                    case 7: this.M13 = value; return;
-                    case 8: this.M20 = value; return;
-                    case 9: this.M21 = value; return;
-                    case 10: this.M22 = value; return;
-                    case 11: this.M23 = value; return;
-                    case 12: this.M30 = value; return;
-                    case 13: this.M31 = value; return;
-                    case 14: this.M32 = value; return;
-                    case 15: this.M33 = value; return;
+                    case 0x0: this.M00 = value; return;
+                    case 0x1: this.M01 = value; return;
+                    case 0x2: this.M02 = value; return;
+                    case 0x3: this.M03 = value; return;
+                    case 0x4: this.M10 = value; return;
+                    case 0x5: this.M11 = value; return;
+                    case 0x6: this.M12 = value; return;
+                    case 0x7: this.M13 = value; return;
+                    case 0x8: this.M20 = value; return;
+                    case 0x9: this.M21 = value; return;
+                    case 0xA: this.M22 = value; return;
+                    case 0xB: this.M23 = value; return;
+                    case 0xC: this.M30 = value; return;
+                    case 0xD: this.M31 = value; return;
+                    case 0xE: this.M32 = value; return;
+                    case 0xF: this.M33 = value; return;
                     default: throw new ArgumentOutOfRangeException(nameof(index), "Index must be between 0 and 15");
                 }
             }
@@ -539,7 +531,6 @@ namespace REghZy.MathsF {
         /// <param name="b">Bottom</param>
         /// <param name="n">Near</param>
         /// <param name="f">Far</param>
-        /// <returns></returns>
         public static Matrix4 Orthographic(float l, float t, float r, float b, float n, float f) {
             Matrix4 mat = new Matrix4();
             mat.M00 = 2 / (r - l); mat.M01 = 0.0f;        mat.M02 = 0.0f;         mat.M03 = -(r + l) / (r - l);

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Media.Media3D;
-using REghZy.MathsF;
+﻿using REghZy.MathsF;
 
 namespace REghZy.WPF.Themes {
     /// <summary>

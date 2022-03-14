@@ -30,11 +30,6 @@
             <param name="stream"></param>
             <exception cref="T:System.NullReferenceException"></exception>
         </member>
-        <member name="M:REghZy.Streams.BlockingStream.#ctor">
-            <summary>
-            Creates a new instance of the blocking stream, without an underlying stream (it can be set after the constructor)
-            </summary>
-        </member>
         <member name="M:REghZy.Streams.BlockingStream.Read(System.Byte[],System.Int32,System.Int32)">
             <summary>
             Reads from the stream, blocking until it reads the given count
@@ -63,6 +58,19 @@
             A small buffer for reading into
             </summary>
         </member>
+        <member name="T:REghZy.Streams.DataInputStreamLE">
+            <summary>
+            A class for reading primitive objects from a stream
+            <para>
+            Most method have repeated code for speed reasons...
+            </para>
+            </summary>
+        </member>
+        <member name="F:REghZy.Streams.DataInputStreamLE.buffer8">
+            <summary>
+            A small buffer for reading into
+            </summary>
+        </member>
         <member name="T:REghZy.Streams.DataOutputStream">
             <summary>
             A class for writing primitive objects to a stream
@@ -76,14 +84,32 @@
             A temporary buffer used for writing
             </summary>
         </member>
+        <member name="T:REghZy.Streams.DataOutputStreamLE">
+            <summary>
+            A data output stream that uses little-endianness when writing data. This is not
+            what networking usually uses, but this way is typically faster
+            </summary>
+        </member>
+        <member name="F:REghZy.Streams.DataOutputStreamLE.buffer8">
+            <summary>
+            A temporary buffer used for writing
+            </summary>
+        </member>
+        <member name="M:REghZy.Streams.DataOutputStreamLE.WritePrimitive``1(``0)">
+            <summary>
+            Writes a primitive blittable value type
+            </summary>
+            <param name="value"></param>
+            <typeparam name="T"></typeparam>
+        </member>
         <member name="T:REghZy.Streams.DataStream">
             <summary>
-            A base object stream that is always open
+            A base data stream for sending and receiving data
             </summary>
         </member>
         <member name="P:REghZy.Streams.DataStream.Stream">
             <summary>
-            The actual stream that this connection is built on
+            The actual stream that this connection uses
             </summary>
         </member>
         <member name="P:REghZy.Streams.DataStream.Input">
@@ -100,6 +126,22 @@
             <summary>
             Gets the number of bytes that can be read without blocking
             </summary>
+        </member>
+        <member name="M:REghZy.Streams.DataStream.#ctor(System.IO.Stream)">
+            <summary>
+            Creates a new data stream. A data input stream and data output stream will be created automatically
+            </summary>
+            <param name="stream">The stream to use</param>
+            <exception cref="T:System.NullReferenceException">The stream is null</exception>
+        </member>
+        <member name="M:REghZy.Streams.DataStream.#ctor(System.IO.Stream,REghZy.Streams.IDataInput,REghZy.Streams.IDataOutput)">
+            <summary>
+            Creates a new data stream, using the given stream, data input and data output
+            </summary>
+            <param name="stream">The stream to use</param>
+            <param name="input">The data input to use for reading</param>
+            <param name="output">The data output to use for writing</param>
+            <exception cref="T:System.NullReferenceException">The stream, input or output is null</exception>
         </member>
         <member name="M:REghZy.Streams.DataStream.CanRead">
             <summary>
@@ -120,11 +162,15 @@
         <member name="T:REghZy.Streams.IDataInput">
             <summary>
             An interface for reading primitive data from a stream
+            <para>
+            The bytes will be read in the big-endianness format, apart from reading pointer values, which will be
+            read in your processor architecture's format, which for modern hardware is little-endianness
+            </para>
             </summary>
         </member>
         <member name="P:REghZy.Streams.IDataInput.Stream">
             <summary>
-            The stream that this data input uses
+            The base stream that this data input will read from
             </summary>
         </member>
         <member name="M:REghZy.Streams.IDataInput.Close">
@@ -169,7 +215,7 @@
         <member name="M:REghZy.Streams.IDataInput.ReadEnum8``1">
             <summary>
             Reads 1 byte and converts it to an enum. This requires that the enum type's size is equal to the
-            size of a byte, otherwise you may lose the extra data (e.g if the enum's value is above s127/u255),
+            size of a byte, otherwise you may lose the extra data (e.g if the enum's value is above 255),
             resulting in undefined behaviour
             </summary>
             <typeparam name="T">The enum type</typeparam>
@@ -300,6 +346,10 @@
         <member name="M:REghZy.Streams.IDataInput.ReadPtr(System.Byte*,System.Int32,System.Int32)">
             <summary>
             Reads 'length' number of bytes into the given pointer buffer (starting at the given offset index)
+            <para>
+            The data read will be in your processor architecture's endianness, which for modern hardware is little-endianness.
+            However, most of the functions in this library read in big-endianness (e.g <see cref="M:REghZy.Streams.IDataInput.ReadUInt"/>)
+            </para>
             </summary>
             <param name="dest">The buffer to write bytes into</param>
             <param name="offset">The index of where to start writing into the pointer (inclusive)</param>
@@ -308,6 +358,10 @@
         <member name="M:REghZy.Streams.IDataInput.ReadPtr(System.IntPtr,System.Int32,System.Int32)">
             <summary>
             Reads 'length' number of bytes into the given pointer (starting at the given offset index)
+            <para>
+            The data read will be in your processor architecture's endianness, which for modern hardware is little-endianness.
+            However, most of the functions in this library read in big-endianness (e.g <see cref="M:REghZy.Streams.IDataInput.ReadUInt"/>)
+            </para>
             </summary>
             <param name="dest">The pointer which should point to a buffer, which is where bytes will be written to</param>
             <param name="offset">The index of where to start writing into the pointer/buffer (inclusive)</param>
@@ -320,6 +374,10 @@
             The number of bytes will be equivalent to the size of the generic unmanaged type passed to the method.
             E.g, reading an integer (Int32) will read 4 bytes
             </para>
+            <para>
+            The data read will be in your processor architecture's endianness, which for modern hardware is little-endianness.
+            However, most of the functions in this library read in big-endianness (e.g <see cref="M:REghZy.Streams.IDataInput.ReadUInt"/>)
+            </para>
             </summary>
             <typeparam name="T">The unmanaged type</typeparam>
         </member>
@@ -330,12 +388,25 @@
             The number of bytes will be equivalent to the size of the generic unmanaged type passed to the method.
             E.g, reading an integer (Int32) will read 4 bytes
             </para>
+            <para>
+            The data read will be in your processor architecture's endianness, which for modern hardware is little-endianness.
+            However, most of the functions in this library read in big-endianness (e.g <see cref="M:REghZy.Streams.IDataInput.ReadUInt"/>)
+            </para>
             </summary>
             <typeparam name="T">The unmanaged type</typeparam>
         </member>
         <member name="T:REghZy.Streams.IDataOutput">
             <summary>
             An interface for writing primitive data to a stream
+            <para>
+            The bytes will be written in the big-endianness format, apart from writing pointer values, which will be
+            written in your processor architecture's format, which for modern hardware is little-endianness
+            </para>
+            </summary>
+        </member>
+        <member name="P:REghZy.Streams.IDataOutput.Stream">
+            <summary>
+            The base stream that this data output will write to
             </summary>
         </member>
         <member name="M:REghZy.Streams.IDataOutput.Flush">
@@ -429,7 +500,7 @@
         </member>
         <member name="M:REghZy.Streams.IDataOutput.WriteUInt(System.UInt32)">
             <summary>
-            Writes an integer (4 bytes) (0 to 4,294,967,295)
+            Writes an unsigned integer (4 bytes) (0 to 4,294,967,295)
             </summary>
             <param name="value"></param>
         </member>
@@ -441,7 +512,7 @@
         </member>
         <member name="M:REghZy.Streams.IDataOutput.WriteULong(System.UInt64)">
             <summary>
-            Writes a long (8 bytes) (0 to 18,446,744,073,709,551,615)
+            Writes an unsigned long (8 bytes) (0 to 18,446,744,073,709,551,615)
             </summary>
             <param name="value"></param>
         </member>
@@ -514,6 +585,10 @@
         <member name="M:REghZy.Streams.IDataOutput.WritePtr(System.Byte*,System.Int32,System.Int32)">
             <summary>
             Writes 'length' bytes from the given pointer (starting, in the pointer, at the given offset)
+            <para>
+            The data written will be in your processor architecture's endianness, which for modern hardware is little-endianness.
+            However, most of the functions in this library write in big-endianness (e.g <see cref="M:REghZy.Streams.IDataOutput.WriteUInt(System.UInt32)"/>)
+            </para>
             </summary>
             <param name="src">The pointer to a buffer of characters</param>
             <param name="offset">The offset within the pointer (usually this starts at 0)</param>
@@ -522,6 +597,10 @@
         <member name="M:REghZy.Streams.IDataOutput.WritePtr(System.IntPtr,System.Int32,System.Int32)">
             <summary>
             Writes 'length' bytes from the given pointer (starting, in the pointer, at the given offset)
+            <para>
+            The data written will be in your processor architecture's endianness, which for modern hardware is little-endianness.
+            However, most of the functions in this library write in big-endianness (e.g <see cref="M:REghZy.Streams.IDataOutput.WriteUInt(System.UInt32)"/>)
+            </para>
             </summary>
             <param name="src">The pointer to a buffer of characters</param>
             <param name="offset">The offset within the pointer (usually this starts at 0)</param>
@@ -530,6 +609,10 @@
         <member name="M:REghZy.Streams.IDataOutput.WritePrimitive``1(``0)">
             <summary>
             Writes a blittable value/object, where all of the value's bytes will be written
+            <para>
+            The data written will be in your processor architecture's endianness, which for modern hardware is little-endianness.
+            However, most of the functions in this library write in big-endianness (e.g <see cref="M:REghZy.Streams.IDataOutput.WriteUInt(System.UInt32)"/>)
+            </para>
             </summary>
             <param name="value">The value to write</param>
             <typeparam name="T">The blittable type</typeparam>

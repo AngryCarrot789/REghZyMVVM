@@ -10,8 +10,8 @@ namespace REghZy.Streams {
     /// </para>
     /// </summary>
     public interface IDataInput {
-/// <summary>
-        /// The stream that this data input uses
+        /// <summary>
+        /// The base stream that this data input will read from
         /// </summary>
         Stream Stream { get; set; }
 

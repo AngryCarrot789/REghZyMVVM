@@ -1,5 +1,3 @@
-using System;
-
 namespace REghZy.MathsF {
     public static class Rotation {
         private const float R2D = 180.0f / Maths.PI;

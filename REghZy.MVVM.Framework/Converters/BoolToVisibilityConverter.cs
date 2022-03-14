@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Input;
 using REghZy.Utils;
 
 namespace REghZy.MVVM.Framework.Converters {
