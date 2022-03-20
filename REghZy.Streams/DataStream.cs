@@ -6,15 +6,16 @@ namespace REghZy.Streams {
     /// A base data stream for sending and receiving data
     /// </summary>
     public abstract class DataStream : IDisposable {
-        protected readonly BlockingStream stream;
-        protected readonly IDataInput input;
-        protected readonly IDataOutput output;
+        protected BlockingStream stream;
+        protected IDataInput input;
+        protected IDataOutput output;
 
         /// <summary>
         /// The actual stream that this connection uses
         /// </summary>
         public BlockingStream Stream {
             get => this.stream;
+            set => this.stream = value;
         }
 
         /// <summary>
@@ -22,6 +23,7 @@ namespace REghZy.Streams {
         /// </summary>
         public IDataInput Input {
             get => this.input;
+            set => this.input = value;
         }
 
         /// <summary>
@@ -29,12 +31,22 @@ namespace REghZy.Streams {
         /// </summary>
         public IDataOutput Output {
             get => this.output;
+            set => this.output = value;
         }
 
         /// <summary>
         /// Gets the number of bytes that can be read without blocking
         /// </summary>
         public abstract long BytesAvailable { get; }
+
+        /// <summary>
+        /// Creates a new data stream, leaving the stream and data inputs/outputs as null
+        /// </summary>
+        /// <param name="stream">The stream to use</param>
+        /// <exception cref="NullReferenceException">The stream is null</exception>
+        protected DataStream() {
+
+        }
 
         /// <summary>
         /// Creates a new data stream. A data input stream and data output stream will be created automatically

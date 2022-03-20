@@ -1,13 +1,10 @@
 using System;
 using System.IO;
+using System.Text;
 
 namespace REghZy.Streams {
     /// <summary>
-    /// An interface for reading primitive data from a stream
-    /// <para>
-    /// The bytes will be read in the big-endianness format, apart from reading pointer values, which will be
-    /// read in your processor architecture's format, which for modern hardware is little-endianness
-    /// </para>
+    /// An interface for reading data from a stream
     /// </summary>
     public interface IDataInput {
         /// <summary>
@@ -50,52 +47,34 @@ namespace REghZy.Streams {
         void ReadFully(byte[] dest, int offset, int length);
 
         /// <summary>
+        /// Reads the given number of bytes. This is similar to invoking <see cref="ReadFully(byte[])"/>
+        /// </summary>
+        /// <param name="length">The number of characters to read</param>
+        byte[] ReadBytes(int count);
+
+        /// <summary>
+        /// Reads a short (2 byte) values representing the number of bytes to read, and then reads that many characters
+        /// <para>
+        /// The total number of bytes is equal to 2 + length
+        /// </para>
+        /// </summary>
+        /// <param name="length">The number of characters to read</param>
+        byte[] ReadBytesLabelled();
+
+        /// <summary>
         /// Reads 1 byte and return true if its value is 1, otherwise false
         /// </summary>
         bool ReadBool();
 
         /// <summary>
-        /// Reads 1 byte and converts it to an enum. This requires that the enum type's size is equal to the
-        /// size of a byte, otherwise you may lose the extra data (e.g if the enum's value is above 255),
-        /// resulting in undefined behaviour
+        /// Reads 1 signed <see cref="sbyte"/> (1 sign bit + 7 value bits)
         /// </summary>
-        /// <typeparam name="T">The enum type</typeparam>
-        /// <returns>The enum itself</returns>
-        T ReadEnum8<T>() where T : unmanaged, Enum;
-
-        /// <summary>
-        /// Reads 2 bytes and converts it to an enum. This requires that the enum type's size is smaller than or equal to the
-        /// size of a short/ushort, otherwise you may lose the extra data, resulting in undefined behaviour
-        /// </summary>
-        /// <typeparam name="T">The enum type</typeparam>
-        /// <returns>The enum itself</returns>
-        T ReadEnum16<T>() where T : unmanaged, Enum;
-
-        /// <summary>
-        /// Reads 4 bytes and converts it to an enum. This requires that the enum type's size is smaller than or equal to the
-        /// size of a int/uint, otherwise you may lose the extra data, resulting in undefined behaviour
-        /// </summary>
-        /// <typeparam name="T">The enum type</typeparam>
-        /// <returns>The enum itself</returns>
-        T ReadEnum32<T>() where T : unmanaged, Enum;
-
-        /// <summary>
-        /// Reads 8 bytes and converts it to an enum. This requires that the enum type's size is smaller than or equal to the
-        /// size of a long/ulong, otherwise you may lose the extra data, resulting in undefined behaviour
-        /// </summary>
-        /// <typeparam name="T">The enum type</typeparam>
-        /// <returns>The enum itself</returns>
-        T ReadEnum64<T>() where T : unmanaged, Enum;
+        sbyte ReadSByte();
 
         /// <summary>
         /// Reads 1 unsigned <see cref="byte"/> (8 value bits)
         /// </summary>
         byte ReadByte();
-
-        /// <summary>
-        /// Reads 1 signed <see cref="sbyte"/> (1 sign bit + 7 value bits)
-        /// </summary>
-        sbyte ReadSByte();
 
         /// <summary>
         /// Reads 2 bytes and joins them into a <see cref="short"/> value (1 sign bit + 15 value bits)
@@ -138,6 +117,39 @@ namespace REghZy.Streams {
         double ReadDouble();
 
         /// <summary>
+        /// Reads 1 byte and converts it to an enum. This requires that the enum type's size is equal to the
+        /// size of a byte, otherwise you may lose the extra data (e.g if the enum's value is above 255),
+        /// resulting in undefined behaviour
+        /// </summary>
+        /// <typeparam name="T">The enum type</typeparam>
+        /// <returns>The enum itself</returns>
+        T ReadEnum08<T>() where T : unmanaged, Enum;
+
+        /// <summary>
+        /// Reads 2 bytes and converts it to an enum. This requires that the enum type's size is smaller than or equal to the
+        /// size of a short/ushort, otherwise you may lose the extra data, resulting in undefined behaviour
+        /// </summary>
+        /// <typeparam name="T">The enum type</typeparam>
+        /// <returns>The enum itself</returns>
+        T ReadEnum16<T>() where T : unmanaged, Enum;
+
+        /// <summary>
+        /// Reads 4 bytes and converts it to an enum. This requires that the enum type's size is smaller than or equal to the
+        /// size of a int/uint, otherwise you may lose the extra data, resulting in undefined behaviour
+        /// </summary>
+        /// <typeparam name="T">The enum type</typeparam>
+        /// <returns>The enum itself</returns>
+        T ReadEnum32<T>() where T : unmanaged, Enum;
+
+        /// <summary>
+        /// Reads 8 bytes and converts it to an enum. This requires that the enum type's size is smaller than or equal to the
+        /// size of a long/ulong, otherwise you may lose the extra data, resulting in undefined behaviour
+        /// </summary>
+        /// <typeparam name="T">The enum type</typeparam>
+        /// <returns>The enum itself</returns>
+        T ReadEnum64<T>() where T : unmanaged, Enum;
+
+        /// <summary>
         /// Reads 2 bytes, joins them into a <see cref="ushort"/> value, and casts it to a <see cref="char"/>
         /// </summary>
         char ReadCharUTF16();
@@ -146,6 +158,57 @@ namespace REghZy.Streams {
         /// Reads 1 byte (low byte), and casts it to a <see cref="char"/>
         /// </summary>
         char ReadCharUTF8();
+
+        /// <summary>
+        /// Reads a character using the given encoding
+        /// </summary>
+        /// <param name="encoding"></param>
+        /// <returns></returns>
+        char ReadChar(Encoding encoding);
+
+        /// <summary>
+        /// Reads the given number of characters into a character array. This reads UTF16 chars, so
+        /// each character is 2 bytes, meaning, reading 10 chars will read 20 bytes
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        char[] ReadCharsUTF16(int length);
+
+        /// <summary>
+        /// Reads the given number of characters into a character array. This reads UTF8 chars, so
+        /// each character is 1 bytes, meaning, reading 10 chars will read 10 bytes
+        /// </summary>
+        /// <param name="length">The number of chars (and therefore bytes) to read</param>
+        /// <returns>
+        /// An array with the exact same size of the given length
+        /// </returns>
+        char[] ReadCharsUTF8(int length);
+
+        /// <summary>
+        /// Reads a short (2 byte) values representing the number of chars to read, and then reads that many characters
+        /// <para>
+        /// The total number of bytes is equal to 2 + (length * 2), because UTF16 uses 2 bytes per char
+        /// </para>
+        /// </summary>
+        char[] ReadCharsUTF16Labelled();
+
+        /// <summary>
+        /// Reads a short (2 byte) values representing the number of chars to read, and then reads that many characters
+        /// <para>
+        /// The total number of bytes is equal to 2 + length, because UTF8 uses 1 byte per char
+        /// </para>
+        /// </summary>
+        char[] ReadCharsUTF8Labelled();
+
+        /// <summary>
+        /// Reads an array of characters using the given encoding
+        /// <para>
+        /// Supplying a length parameter is not required as it is always sent
+        /// </para>
+        /// </summary>
+        /// <param name="encoding">The encoding used to decode the bytes</param>
+        /// <returns></returns>
+        char[] ReadChars(Encoding encoding);
 
         /// <summary>
         /// Reads the given number of characters, and joins them into a string
@@ -168,22 +231,33 @@ namespace REghZy.Streams {
         string ReadStringUTF8(int length);
 
         /// <summary>
-        /// Reads the given number of characters into a character array. This reads UTF16 chars, so
-        /// each character is 2 bytes, meaning, reading 10 chars will read 20 bytes
+        /// Reads a short (2 byte) values representing the number of chars to read, and then reads that many characters into a string
+        /// <para>
+        /// This is the exact same as <see cref="ReadCharsUTF16Labelled"/>, but it crates a string for convenience
+        /// </para>
+        /// <para>
+        /// The total number of bytes is equal to 2 + (length * 2), because UTF16 uses 2 bytes per char
+        /// </para>
         /// </summary>
-        /// <param name="length"></param>
-        /// <returns></returns>
-        char[] ReadCharsUTF16(int length);
+        string ReadStringUTF16Labelled();
 
         /// <summary>
-        /// Reads the given number of characters into a character array. This reads UTF8 chars, so
-        /// each character is 1 bytes, meaning, reading 10 chars will read 10 bytes
+        /// Reads a short (2 byte) values representing the number of chars to read, and then reads that many characters into a string
+        /// <para>
+        /// This is the exact same as <see cref="ReadCharsUTF8Labelled"/>, but it crates a string for convenience
+        /// </para>
+        /// <para>
+        /// The total number of bytes is equal to 2 + length, because UTF8 uses 1 byte per char
+        /// </para>
         /// </summary>
-        /// <param name="length">The number of chars (and therefore bytes) to read</param>
-        /// <returns>
-        /// An array with the exact same size of the given length
-        /// </returns>
-        char[] ReadCharsUTF8(int length);
+        string ReadStringUTF8Labelled();
+
+        /// <summary>
+        /// Reads a string with the given encoding. Providing the string's length is not required, because the length is always sent
+        /// </summary>
+        /// <param name="length">The number of characters to read</param>
+        /// <returns></returns>
+        string ReadString(Encoding encoding);
 
         /// <summary>
         /// Reads 'length' number of bytes into the given pointer buffer (starting at the given offset index)

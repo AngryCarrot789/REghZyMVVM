@@ -23,6 +23,10 @@ namespace REghZy.MathsF {
 
         public Vector3f Homogenised => new Vector3f(this.x / this.w, this.y/ this.w, this.z/ this.w);
 
+        public float MagnitudeSquared => this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w;
+
+        public float Magnitude => (float) Math.Sqrt(this.MagnitudeSquared);
+
         public Vector3f XYZ {
             get => new Vector3f(this.x, this.y, this.z);
             set {
@@ -39,7 +43,7 @@ namespace REghZy.MathsF {
                     case 1: return this.y;
                     case 2: return this.z;
                     case 3: return this.w;
-                    default: throw new ArgumentOutOfRangeException(nameof(i), "Index must be between 0 and 3");
+                    default: throw new ArgumentOutOfRangeException(nameof(i), $"Index must be between 0 and 3: {i}");
                 }
             }
             set {
@@ -48,7 +52,7 @@ namespace REghZy.MathsF {
                     case 1: this.y = value; return;
                     case 2: this.z = value; return;
                     case 3: this.w = value; return;
-                    default: throw new ArgumentOutOfRangeException(nameof(i), "Index must be between 0 and 3");
+                    default: throw new ArgumentOutOfRangeException(nameof(i), $"Index must be between 0 and 3: {i}");
                 }
             }
         }

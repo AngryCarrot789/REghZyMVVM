@@ -38,6 +38,9 @@
         <Reference Include="System" />
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
+        <Reference Include="System.Numerics.Vectors, Version=4.1.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+          <HintPath>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\3.1.23\System.Numerics.Vectors.dll</HintPath>
+        </Reference>
         <Reference Include="System.Xaml" />
         <Reference Include="System.Xml" />
         <Reference Include="WindowsBase" />
@@ -49,6 +52,8 @@
         <Compile Include="Attached\SelectAllAttachedProperty.cs" />
         <Compile Include="Attached\TextHinting.cs" />
         <Compile Include="Controls\AutoClosingGridSplitter.cs" />
+        <Compile Include="Controls\Range.cs" />
+        <Compile Include="Controls\ScaleSlider.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

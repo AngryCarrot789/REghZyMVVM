@@ -98,13 +98,13 @@
         <member name="T:REghZyPacketSystem.Packeting.Ack.AckProcessor`1">
             <summary>
             A helper class for processing ACK packets. Generally, there should only be 1 instance of the
-            AckProcessor per packet type (each implementation is usually a singleton). Atleast, that's the intention
+            AckProcessor per packet type (each implementation is usually a singleton). At least, that's the intention
             </summary>
-            <typeparam name="TPacket">The type of ACK packet that this processor will processs</typeparam>
+            <typeparam name="TPacket">The type of ACK packet that this processor will process</typeparam>
         </member>
-        <member name="P:REghZyPacketSystem.Packeting.Ack.AckProcessor`1.Network">
+        <member name="P:REghZyPacketSystem.Packeting.Ack.AckProcessor`1.System">
             <summary>
-            The packet system that this Ack processor uses
+            The packet system that this Ack processor uses to send and receive packets from
             </summary>
         </member>
         <member name="P:REghZyPacketSystem.Packeting.Ack.AckProcessor`1.AllowResendPacket">
@@ -119,11 +119,20 @@
         </member>
         <member name="P:REghZyPacketSystem.Packeting.Ack.AckProcessor`1.AllowDuplicatedKey">
             <summary>
-            States whether to process packets that use a key that's already been processed
+            Whether to process packets that use an idempotency key that has already been processed
             <para>
-            This is false by default
+            This is false by default, which is the most useful option; 
+            re-processing the same packet could be dangerous
             </para>
             </summary>
+        </member>
+        <member name="M:REghZyPacketSystem.Packeting.Ack.AckProcessor`1.#ctor(REghZyPacketSystem.Systems.PacketSystem,REghZyPacketSystem.Systems.Handling.Priority)">
+            <summary>
+            Creates a new AckProcessor
+            </summary>
+            <param name="system">The packet system that this Ack processor uses to send and receive packets from</param>
+            <param name="priority">The priority of the packet handler</param>
+            <exception cref="T:System.ArgumentNullException">The packet system is null</exception>
         </member>
         <member name="M:REghZyPacketSystem.Packeting.Ack.AckProcessor`1.SendRequest(`0)">
             <summary>
@@ -159,18 +168,18 @@
             The packet sent back from the server
             </returns>
         </member>
-        <member name="M:REghZyPacketSystem.Packeting.Ack.AckProcessor`1.SendBackFromAck(`0,`0)">
+        <member name="M:REghZyPacketSystem.Packeting.Ack.AckProcessor`1.SendToClient(`0,`0)">
             <summary>
             A helper function for sending a packet back to the client. It automatically sets the key from <paramref name="fromClient"/>,
             and sets the destination code to <see cref="F:REghZyPacketSystem.Packeting.Ack.Destination.ToClient"/>.
             <para>
-            This method just sets the key, and then invokes <see cref="M:REghZyPacketSystem.Packeting.Ack.AckProcessor`1.SendBackFromAck(`0)"/>
+            This method just sets the key, and then invokes <see cref="M:REghZyPacketSystem.Packeting.Ack.AckProcessor`1.SendToClient(`0)"/>
             </para>
             </summary>
             <param name="fromClient">The original packet received from the client</param>
             <param name="toClient">The new packet that contains custom response data</param>
         </member>
-        <member name="M:REghZyPacketSystem.Packeting.Ack.AckProcessor`1.SendBackFromAck(`0)">
+        <member name="M:REghZyPacketSystem.Packeting.Ack.AckProcessor`1.SendToClient(`0)">
             <summary>
             A helper function for sending a packet back to the client. It automatically sets the destination for you,
             and then adds the packet to the send packet cache (in case a request is made with the same ID),
@@ -213,12 +222,15 @@
             aka the mid-way between getting and receiving data (that is, if the ACK packet is used for that)
             <para>
             If the client wanted data (which is usually the usage for ACK packets), the packet in the parameters  will usually
-            contain request information, which will be used to fill in data for a new packet, and then be sent to the client
+            contain request information, which will be used to fill in data for a new packet, and then that one gets sent to the client
+            </para>
+            <para>
+            By default, this should return true, unless some explicit functionality is required
             </para>
             </summary>
             <returns>
-            <see langword="true"/> if the packet is fully handled, and should't be sent anywhere else (see <see cref="M:REghZyPacketSystem.Systems.Handling.IHandler.Handle(REghZyPacketSystem.Packeting.Packet)"/>),
-            <see langword="false"/> if the packet shouldn't be handled, and can possibly be sent to other handlers/listeners
+            True if the packet is fully handled, and shouldn't be sent anywhere else (see <see cref="M:REghZyPacketSystem.Systems.Handling.IHandler.Handle(REghZyPacketSystem.Packeting.Packet)"/>),
+            otherwise false if the packet shouldn't be handled, and can possibly be sent to other handlers/listeners
             </returns>
         </member>
         <member name="M:REghZyPacketSystem.Packeting.Ack.AckProcessor`1.OnProcessPacketFromServer(`0)">
@@ -357,6 +369,24 @@
             <param name="a"></param>
             <param name="b"></param>
         </member>
+        <member name="T:REghZyPacketSystem.Packeting.Ack.PacketACK">
+            <summary>
+            A packet that supports send, acknowledgement and receive between a server and client
+            <para>
+            
+            </para>
+            </summary>
+        </member>
+        <member name="F:REghZyPacketSystem.Packeting.Ack.PacketACK.key">
+            <summary>
+            The ACK packet's idempotency key
+            </summary>
+        </member>
+        <member name="F:REghZyPacketSystem.Packeting.Ack.PacketACK.destination">
+            <summary>
+            The destination of this packet
+            </summary>
+        </member>
         <member name="M:REghZyPacketSystem.Packeting.Ack.PacketACK.GetPayloadSizeToServer">
             <summary>
             The size of the payload that is being sent to the server. This is
@@ -403,12 +433,15 @@
             </para>
             </summary>
         </member>
-        <member name="F:REghZyPacketSystem.Packeting.Packet.MIN_HEADER_LENGTH">
+        <member name="P:REghZyPacketSystem.Packeting.Packet.MinimumHeaderSize">
             <summary>
-            The absolute minimum size of a packet's header. As of REghZyPacketSystem-2.1, this is 7 bytes
+            The absolute minimum size of a packet's header. As of REghZyPacketSystem-2.2, this is 4 bytes
+            <para>
+            If <see cref="F:REghZyPacketSystem.Packeting.Packet.UsePreamble"/> is set to true, then, as of v2.2, this will be 8 bytes
+            </para>
             </summary>
         </member>
-        <member name="F:REghZyPacketSystem.Packeting.Packet.MAX_PAYLOAD_LENGTH">
+        <member name="P:REghZyPacketSystem.Packeting.Packet.MaximumPayloadSize">
             <summary>
             The maximum size of a packet, including the packet header
             </summary>
@@ -418,7 +451,19 @@
             Finds all packet classes in all assemblies attributed with <see cref="T:REghZyPacketSystem.Packeting.PacketImplementation"/> and tries to register them
             </summary>
         </member>
-        <member name="M:REghZyPacketSystem.Packeting.Packet.Register``1(System.Byte,System.Func{``0})">
+        <member name="M:REghZyPacketSystem.Packeting.Packet.AutoRegister``1">
+            <summary>
+            Tries to automatically register a packet based on it's packet implementation annotation
+            </summary>
+            <typeparam name="T">The packet type</typeparam>
+        </member>
+        <member name="M:REghZyPacketSystem.Packeting.Packet.AutoRegister(System.Type)">
+            <summary>
+            Tries to automatically register a packet based on it's packet implementation annotation
+            </summary>
+            <typeparam name="T">The packet type</typeparam>
+        </member>
+        <member name="M:REghZyPacketSystem.Packeting.Packet.Register``1(System.UInt16,System.Func{``0})">
             <summary>
             Registers the given packet ID and the creator. The creator is only used to reduce the use of reflection
             </summary>
@@ -426,7 +471,7 @@
             <param name="id"></param>
             <param name="creator"></param>
         </member>
-        <member name="M:REghZyPacketSystem.Packeting.Packet.Register(System.Type,System.Byte,System.Func{REghZyPacketSystem.Packeting.Packet})">
+        <member name="M:REghZyPacketSystem.Packeting.Packet.Register(System.Type,System.UInt16,System.Func{REghZyPacketSystem.Packeting.Packet})">
             <summary>
             Registers the given packet ID and the creator. The creator is only used to reduce the use of reflection
             </summary>
@@ -487,7 +532,7 @@
         </member>
         <member name="P:REghZyPacketSystem.Packeting.PacketImplementation.UseAutoRegister">
             <summary>
-            If true (default value is true), then the packet will be registered automatically once <see cref="M:REghZyPacketSystem.Packeting.Packet.Setup"/> is called
+            If true (default value is true), then the packet will be registered automatically when <see cref="M:REghZyPacketSystem.Packeting.Packet.Setup"/> is called
             <para>
             If this is false, then the packet's static constructor will be executed,
             allowing the packet to be registered in there instead of the auto-registration
@@ -657,9 +702,11 @@
         <member name="M:REghZyPacketSystem.Sync.SyncedAttribute.Update(REghZyPacketSystem.Packeting.Packet,System.Object)">
             <summary>
             Updates the target with the data of the given packet. If the target doesn't use data from the given packet, then it will be ignored
+            <para>
+            It's very important that this method does not invoke any function
+            in the <see cref="T:REghZyPacketSystem.Sync.SyncTable"/>, otherwise a possible deadlock could occur
+            </para>
             </summary>
-            <param name="packet"></param>
-            <param name="target"></param>
         </member>
         <member name="M:REghZyPacketSystem.Sync.SyncedAttribute.LoadDetails(System.Type,System.String)">
             <summary>
@@ -752,9 +799,14 @@
             <param name="packet"></param>
             <returns></returns>
         </member>
+        <member name="T:REghZyPacketSystem.Systems.Handling.Priority">
+            <summary>
+            Packet receiving priority
+            </summary>
+        </member>
         <member name="F:REghZyPacketSystem.Systems.Handling.Priority.HIGHEST">
             <summary>
-            This packet must be received first ALL OF THE TIME
+            This packet must be received first
             </summary>
         </member>
         <member name="F:REghZyPacketSystem.Systems.Handling.Priority.HIGH">
@@ -764,12 +816,12 @@
         </member>
         <member name="F:REghZyPacketSystem.Systems.Handling.Priority.NORMAL">
             <summary>
-            Doesn't really matter. This is typically used for monitoring
+            Just normal; this is typically used for monitoring
             </summary>
         </member>
         <member name="F:REghZyPacketSystem.Systems.Handling.Priority.LOW">
             <summary>
-            Really doesn't matter at all
+            Quite low
             </summary>
         </member>
         <member name="F:REghZyPacketSystem.Systems.Handling.Priority.LOWEST">
@@ -816,26 +868,132 @@
             <summary>
             Indicates whether this packet's connection is connected or not
             <para>
-            Calling <see cref="M:REghZyPacketSystem.Systems.PacketSystem.Start"/> should result in this being <see langword="true"/>
+            Calling <see cref="!:Start"/> should result in this being <see langword="true"/>
             </para>
             <para>
-            Calling <see cref="M:REghZyPacketSystem.Systems.PacketSystem.Stop"/> should result in this being <see langword="false"/>
+            Calling <see cref="!:Stop"/> should result in this being <see langword="false"/>
             </para>
             </summary>
         </member>
         <member name="M:REghZyPacketSystem.Systems.PacketSystem.#ctor(REghZyPacketSystem.BaseConnection)">
             <summary>
-            Creates a new instance of a packet system
+            Creates a new instance of a packet system, using the given connection
             </summary>
         </member>
-        <member name="M:REghZyPacketSystem.Systems.PacketSystem.Start">
+        <member name="M:REghZyPacketSystem.Systems.PacketSystem.RegisterHandler(REghZyPacketSystem.Systems.Handling.PredicateHandler,REghZyPacketSystem.Systems.Handling.Priority)">
             <summary>
-            Starts the packet system. By default, this just calls <see cref="M:REghZyPacketSystem.BaseConnection.Connect"/>
+            Registers a plain predicate packet handler
             </summary>
         </member>
-        <member name="M:REghZyPacketSystem.Systems.PacketSystem.Stop">
+        <member name="M:REghZyPacketSystem.Systems.PacketSystem.RegisterHandler(System.Predicate{REghZyPacketSystem.Packeting.Packet},REghZyPacketSystem.Systems.Handling.Priority)">
             <summary>
-            Stops the packet system. By default, this just calls <see cref="M:REghZyPacketSystem.BaseConnection.Disconnect"/>
+            Registers the given predicate as a <see cref="T:REghZyPacketSystem.Systems.Handling.PredicateHandler"/>
+            </summary>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.PacketSystem.RegisterHandler(System.Predicate{REghZyPacketSystem.Packeting.Packet},System.Predicate{REghZyPacketSystem.Packeting.Packet},REghZyPacketSystem.Systems.Handling.Priority)">
+            <summary>
+            Registers the given predicate as a <see cref="T:REghZyPacketSystem.Systems.Handling.PredicateHandler"/>, where the canProcess parameter
+            will be used to determine if the handler will receive packets or not
+            </summary>
+            <param name="canProcess">The predicate that decides if the handler can handle packets or not (therefore determining if handler will be invoked or not)</param>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.PacketSystem.RegisterHandler(System.Func{REghZyPacketSystem.Systems.PacketSystem,REghZyPacketSystem.Packeting.Packet,System.Boolean},REghZyPacketSystem.Systems.Handling.Priority)">
+            <summary>
+            Registers the given predicate as a <see cref="T:REghZyPacketSystem.Systems.Handling.PredicateHandler"/>
+            <para>
+            This predicate also provide the packet system which is dealing with the packet
+            </para>
+            </summary>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.PacketSystem.RegisterHandler(System.Func{REghZyPacketSystem.Systems.PacketSystem,REghZyPacketSystem.Packeting.Packet,System.Boolean},System.Func{REghZyPacketSystem.Systems.PacketSystem,REghZyPacketSystem.Packeting.Packet,System.Boolean},REghZyPacketSystem.Systems.Handling.Priority)">
+            <summary>
+            Registers the given predicate function as a <see cref="T:REghZyPacketSystem.Systems.Handling.PredicateHandler"/>, where the canProcess parameter
+            will be used to determine if the handler will receive packets or not
+            <para>
+            These two predicates also provide the packet system which is dealing with the packet
+            </para>
+            </summary>
+            <param name="canProcess">The predicate that decides if the handler can handle packets or not (therefore determining if handler will be invoked or not)</param>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.PacketSystem.RegisterHandler``1(System.Predicate{``0},REghZyPacketSystem.Systems.Handling.Priority)">
+            <summary>
+            Registers the given generic predicate handler
+            </summary>
+            <typeparam name="T">The packet type</typeparam>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.PacketSystem.RegisterHandler``1(System.Predicate{``0},System.Predicate{``0},REghZyPacketSystem.Systems.Handling.Priority)">
+            <summary>
+            Registers the given predicate function as a <see cref="T:REghZyPacketSystem.Systems.Handling.PredicateHandler"/>, where the canProcess parameter
+            will be used to determine if the handler will receive packets or not
+            </summary>
+            <param name="canProcess">The predicate that decides if the handler can handle packets or not (therefore determining if handler will be invoked or not)</param>
+            <typeparam name="T">The packet type</typeparam>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.PacketSystem.RegisterHandler``1(System.Func{REghZyPacketSystem.Systems.PacketSystem,``0,System.Boolean},REghZyPacketSystem.Systems.Handling.Priority)">
+            <summary>
+            Registers the given predicate as a <see cref="T:REghZyPacketSystem.Systems.Handling.PredicateHandler"/>
+            <para>
+            This predicate also provide the packet system which is dealing with the packet
+            </para>
+            </summary>
+            <typeparam name="T">The packet type</typeparam>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.PacketSystem.RegisterHandler``1(System.Func{REghZyPacketSystem.Systems.PacketSystem,``0,System.Boolean},System.Func{REghZyPacketSystem.Systems.PacketSystem,``0,System.Boolean},REghZyPacketSystem.Systems.Handling.Priority)">
+            <summary>
+            Registers the given predicate function as a <see cref="T:REghZyPacketSystem.Systems.Handling.PredicateHandler"/>, where the canProcess parameter
+            will be used to determine if the handler will receive packets or not
+            <para>
+            These two predicates also provide the packet system which is dealing with the packet
+            </para>
+            </summary>
+            <typeparam name="T">The packet type</typeparam>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.PacketSystem.RegisterListener(REghZyPacketSystem.Systems.Handling.GeneralListener,REghZyPacketSystem.Systems.Handling.Priority)">
+            <summary>
+            Registers the given plain packet listeners
+            </summary>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.PacketSystem.RegisterListener(System.Action{REghZyPacketSystem.Packeting.Packet},REghZyPacketSystem.Systems.Handling.Priority)">
+            <summary>
+            Registers the given callback as a <see cref="T:REghZyPacketSystem.Systems.Handling.GeneralListener"/>
+            </summary>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.PacketSystem.RegisterListener(System.Action{REghZyPacketSystem.Systems.PacketSystem,REghZyPacketSystem.Packeting.Packet},REghZyPacketSystem.Systems.Handling.Priority)">
+            <summary>
+            Registers the given callback as a <see cref="T:REghZyPacketSystem.Systems.Handling.GeneralListener"/>, also providing the packet system that is dealing
+            with the handler, which is useful in case anonymous methods aren't used and a general method is used instead
+            </summary>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.PacketSystem.RegisterListener``1(System.Action{``0},REghZyPacketSystem.Systems.Handling.Priority)">
+            <summary>
+            Registers the given callback as a <see cref="T:REghZyPacketSystem.Systems.Handling.GeneralListener"/>
+            </summary>
+            <typeparam name="T">The packet type</typeparam>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.PacketSystem.RegisterListener``1(System.Action{REghZyPacketSystem.Systems.PacketSystem,``0},REghZyPacketSystem.Systems.Handling.Priority)">
+            <summary>
+            Registers the given callback as a <see cref="T:REghZyPacketSystem.Systems.Handling.GeneralListener"/>, also providing the packet system that is dealing
+            with the handler, which is useful in case anonymous methods aren't used and a general method is used instead
+            </summary>
+            <typeparam name="T">The packet type</typeparam>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.PacketSystem.UnregisterHandler(REghZyPacketSystem.Systems.Handling.Priority,REghZyPacketSystem.Systems.Handling.IHandler)">
+            <summary>
+            Unregisters a handler, stopping it from handling packets
+            </summary>
+            <param name="priority"></param>
+            <param name="handler"></param>
+            <returns></returns>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.PacketSystem.UnregisterListener(REghZyPacketSystem.Systems.Handling.Priority,REghZyPacketSystem.Systems.Handling.IListener)">
+            <summary>
+            Unregisters a listener, stopping it from listening to packets
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.PacketSystem.ClearListenerAndHandlers">
+            <summary>
+            Unregisters all listeners and handlers that this packet system uses
             </summary>
         </member>
         <member name="M:REghZyPacketSystem.Systems.PacketSystem.ReadNextPacket">
@@ -916,7 +1074,17 @@
             Whether this has been disposed or not
             </summary>
         </member>
-        <member name="P:REghZyPacketSystem.Systems.ThreadPacketSystem.WriteCount">
+        <member name="P:REghZyPacketSystem.Systems.ThreadPacketSystem.ThreadIntervalDelayTime">
+            <summary>
+            The amount of time to pause the read/write threads per tick while reading/writing is enabled
+            </summary>
+        </member>
+        <member name="P:REghZyPacketSystem.Systems.ThreadPacketSystem.ThreadSleepTime">
+            <summary>
+            The amount of time to pause the read/write threads while reading/writing is disabled. By default, this is 50 (milliseconds)
+            </summary>
+        </member>
+        <member name="P:REghZyPacketSystem.Systems.ThreadPacketSystem.WritePerTick">
             <summary>
             The number of packets that the write thread should try to send each time
             <para>
@@ -995,14 +1163,17 @@
             Creates a new instance of the threaded packet system
             </summary>
         </member>
-        <member name="M:REghZyPacketSystem.Systems.ThreadPacketSystem.Start">
+        <member name="M:REghZyPacketSystem.Systems.ThreadPacketSystem.StartThreads">
             <summary>
-            Starts the base packet system, and both the read and write threads
+            Starts the threads. This should only be invoked once, see <see cref="P:REghZyPacketSystem.Systems.ThreadPacketSystem.Paused"/> to pause/unpause the threads
             </summary>
         </member>
-        <member name="M:REghZyPacketSystem.Systems.ThreadPacketSystem.Stop">
+        <member name="M:REghZyPacketSystem.Systems.ThreadPacketSystem.KillThreads">
             <summary>
-            Disconnects from the connection, and stops the read and write threads
+            Kills the threads making them un-restartable. This should only be invoked once, see <see cref="P:REghZyPacketSystem.Systems.ThreadPacketSystem.Paused"/> to pause/unpause threads
+            <para>
+            This effectively disposes the thread packet system
+            </para>
             </summary>
         </member>
         <member name="M:REghZyPacketSystem.Systems.ThreadPacketSystem.PauseThreads">
@@ -1010,7 +1181,7 @@
             Sets <see cref="P:REghZyPacketSystem.Systems.ThreadPacketSystem.Paused"/> to true, stopping the threads from reading and writing
             </summary>
         </member>
-        <member name="M:REghZyPacketSystem.Systems.ThreadPacketSystem.UnpauseThreads">
+        <member name="M:REghZyPacketSystem.Systems.ThreadPacketSystem.ResumeThreads">
             <summary>
             Sets <see cref="P:REghZyPacketSystem.Systems.ThreadPacketSystem.Paused"/> to false, allowing the threads to read and write again
             </summary>
@@ -1020,9 +1191,17 @@
             Disconnects and kills the threads used with this Threaded packet system
             </summary>
         </member>
-        <member name="M:REghZyPacketSystem.Systems.ThreadPacketSystem.DoThreadDelay">
+        <member name="M:REghZyPacketSystem.Systems.ThreadPacketSystem.DoTickDelay">
             <summary>
             Used by the read and write threads to delay them, so that they aren't running at 100% all the time, consuming resources
+            </summary>
+        </member>
+        <member name="M:REghZyPacketSystem.Systems.ThreadPacketSystem.DoSleepDelay">
+            <summary>
+            Used by the read and write threads to delay them while <see cref="P:REghZyPacketSystem.Systems.ThreadPacketSystem.CanSend"/>/<see cref="P:REghZyPacketSystem.Systems.ThreadPacketSystem.CanRead"/> is false
+            <para>
+            This will usually pause for quite a long time (10-50ms), but it can be removed
+            </para>
             </summary>
         </member>
         <member name="T:REghZyPacketSystem.Utils.Enums`1">

@@ -166,6 +166,15 @@
             </para>
             </summary>
         </member>
+        <member name="F:REghZy.Utils.Time.TICK_PER_MILLIS_D">
+            <summary>
+            A multiplier for converting ticks to milliseconds
+            <para>
+            If one were to call <see cref="M:REghZy.Utils.Time.GetSystemMillis"/>, then <see cref="M:System.Threading.Thread.Sleep(System.Int32)"/>
+            for 1000ms, then <see cref="M:REghZy.Utils.Time.GetSystemMillis"/>, the interval will roughly equal to 1,000
+            </para>
+            </summary>
+        </member>
         <member name="F:REghZy.Utils.Time.TICK_PER_NANOS">
             <summary>
             A multiplier for converting ticks to milliseconds
@@ -190,6 +199,11 @@
             Gets the system's performance counter ticks and converts them to milliseconds
             </summary>
         </member>
+        <member name="M:REghZy.Utils.Time.GetSystemMillisD">
+            <summary>
+            Gets the system's performance counter ticks and converts them to milliseconds, as a double instead
+            </summary>
+        </member>
         <member name="M:REghZy.Utils.Time.GetSystemSeconds">
             <summary>
             Gets the system's performance counter ticks and converts them to seconds
@@ -201,6 +215,24 @@
             Gets the system's performance counter ticks and converts them to decimal seconds
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:REghZy.Utils.Time.SleepFor(System.Double)">
+            <summary>
+            Precision thread sleep timing
+            <para>
+            This should, in most cases, guarantee the exact amount of time wanted, but it depends how tolerant <see cref="M:System.Threading.Thread.Sleep(System.Int32)"/> is
+            </para>
+            </summary>
+            <param name="delay">The exact number of milliseconds to sleep for</param>
+        </member>
+        <member name="M:REghZy.Utils.Time.SleepFor(System.Int64)">
+            <summary>
+            Precision thread sleep timing
+            <para>
+            This should, in most cases, guarantee the exact amount of time wanted, but it depends how tolerant <see cref="M:System.Threading.Thread.Sleep(System.Int32)"/> is
+            </para>
+            </summary>
+            <param name="delay">The exact number of milliseconds to sleep for</param>
         </member>
         <member name="T:REghZy.Utils.XmlUserSettings`1">
             <summary>

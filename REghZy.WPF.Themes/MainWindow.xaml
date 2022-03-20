@@ -4,11 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:REghZy.WPF.Themes"
+        xmlns:controls="clr-namespace:REghZy.WPF.Controls;assembly=REghZy.WPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         Style="{DynamicResource CustomWindowStyle}">
     <Grid>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="76"/>
-
+        <TextBlock Text="{Binding ElementName=Sus, Path=ScaledValue, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat={}{0:0.####################}}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="150"/>
+        <TextBlock Text="{Binding ElementName=Sus, Path=Value,       UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat={}{0:0.####################}}" HorizontalAlignment="Left" Margin="10,80,0,0" VerticalAlignment="Top" Width="150"/>
+        <controls:ScaleSlider x:Name="Sus" Minimum="0" Maximum="100" VerticalAlignment="Bottom" Height="30" HorizontalAlignment="Stretch"/>
     </Grid>
 </Window>

@@ -19,16 +19,28 @@
             The socket that this data stream uses
             </summary>
         </member>
+        <member name="M:REghZyPacketSystem.Sockets.NetworkDataStream.BigEndianness(System.Net.Sockets.Socket)">
+            <summary>
+            A network data stream that uses the big endianness format for sending and receiving data
+            </summary>
+            <param name="socket"></param>
+            <returns></returns>
+        </member>
+        <member name="M:REghZyPacketSystem.Sockets.NetworkDataStream.LittleEndianness(System.Net.Sockets.Socket)">
+            <summary>
+            A network data stream that uses the little endianness format for sending and receiving data
+            </summary>
+        </member>
         <member name="T:REghZyPacketSystem.Sockets.SocketHelper">
             <summary>
             Set the scene: My computer, and an arduino. Even though an arduino can't run C# code... still
             <para>
-            The arduino is the server, and it invokes <see cref="M:REghZyPacketSystem.Sockets.SocketHelper.AcceptClientConnection(System.Net.Sockets.Socket)"/>. This will wait
+            The arduino is the server, and it invokes <see cref="!:AcceptClientConnection(Socket)"/>. This will wait
             until my computer has tried to connect to it, and once it has, it begins sending/receiving packets
             </para>
             <para>
-            My computer makes a connection to the arduino by calling <see cref="M:REghZyPacketSystem.Sockets.SocketHelper.MakeConnectionToServer(System.Net.EndPoint)"/>. It sits
-            there and waits until the arduino accepts it (it will call <see cref="M:REghZyPacketSystem.Sockets.SocketHelper.AcceptClientConnection(System.Net.Sockets.Socket)"/>). And
+            My computer makes a connection to the arduino by calling <see cref="!:MakeConnectionToServer(EndPoint)"/>. It sits
+            there and waits until the arduino accepts it (it will call <see cref="!:AcceptClientConnection(Socket)"/>). And
             then it begins sending/receiving packets
             </para>
             <para>
@@ -92,7 +104,7 @@
             A socket that is bound to the given port on <see cref="F:System.Net.IPAddress.Any"/>. It is not in a listening state, that must be done manually
             </returns>
         </member>
-        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.MakeConnectionToServer(System.Net.EndPoint)">
+        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.MakeConnectionToServer(System.Net.EndPoint,System.Boolean)">
             <summary>
             We are the client, and we want to make a connection to the server
             <para>
@@ -103,7 +115,7 @@
             A connection that is already connected
             </returns>
         </member>
-        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.MakeConnectionToServerAsync(System.Net.EndPoint)">
+        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.MakeConnectionToServerAsync(System.Net.EndPoint,System.Boolean)">
             <summary>
             We are the client, and we want to make a connection to the server
             <para>
@@ -114,7 +126,7 @@
             A connection that is already connected
             </returns>
         </member>
-        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.MakeConnectionToServer(System.Net.IPAddress,System.Int32)">
+        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.MakeConnectionToServer(System.Net.IPAddress,System.Int32,System.Boolean)">
             <summary>
             We are the client, and we want to make a connection to the server
             <para>
@@ -125,7 +137,7 @@
             A connection that is already connected
             </returns>
         </member>
-        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.MakeConnectionToServerAsync(System.Net.IPAddress,System.Int32)">
+        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.MakeConnectionToServerAsync(System.Net.IPAddress,System.Int32,System.Boolean)">
             <summary>
             We are the client, and we want to make a connection to the server
             <para>
@@ -136,7 +148,7 @@
             A connection that is already connected
             </returns>
         </member>
-        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.AcceptClientConnection(System.Net.Sockets.Socket)">
+        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.AcceptClientConnection(System.Net.Sockets.Socket,System.Boolean)">
             <summary>
             We are the server, and we want to accept any incomming connection from clients
             <para>
@@ -150,7 +162,7 @@
             A connection that is connected to client
             </returns>
         </member>
-        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.AcceptClientConnectionAsync(System.Net.Sockets.Socket)">
+        <member name="M:REghZyPacketSystem.Sockets.SocketHelper.AcceptClientConnectionAsync(System.Net.Sockets.Socket,System.Boolean)">
             <summary>
             We are the server, and we want to accept any incomming connection from clients
             <para>
@@ -214,6 +226,11 @@
         <member name="P:REghZyPacketSystem.Sockets.SocketToServerConnection.Socket">
             <summary>
             The socket which links to the server
+            </summary>
+        </member>
+        <member name="P:REghZyPacketSystem.Sockets.SocketToServerConnection.UseLittleEndianness">
+            <summary>
+            Whether to use little endianness or big endianness (aka the order of bytes in big data types)
             </summary>
         </member>
         <member name="M:REghZyPacketSystem.Sockets.SocketToServerConnection.Connect">

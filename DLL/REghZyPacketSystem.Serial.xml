@@ -14,6 +14,11 @@
             The serial port that this serial connection uses to send/receive data
             </summary>
         </member>
+        <member name="P:REghZyPacketSystem.Serial.SerialConnection.UseLittleEndianness">
+            <summary>
+            Whether to use little endianness or big endianness (aka the order of bytes in big data types)
+            </summary>
+        </member>
         <member name="M:REghZyPacketSystem.Serial.SerialConnection.ClearBuffers">
             <summary>
             Clears the serial buffers

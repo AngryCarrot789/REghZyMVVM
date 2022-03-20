@@ -1,4 +1,9 @@
-﻿using REghZy.MathsF;
+﻿using System;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
+using REghZy.MathsF;
+using REghZy.Streams;
 
 namespace REghZy.WPF.Themes {
     /// <summary>
@@ -7,8 +12,18 @@ namespace REghZy.WPF.Themes {
     public partial class MainWindow {
         public MainWindow() {
             InitializeComponent();
-            Vector3f a = new Vector3f(0.5f, 0.0f, 0.1f) * new Vector3f(5.0f, 10.0f, 15.0f);
-            Vector3f ff = new Vector3f() * a;
+            Task.Run((() => {
+                Console.WriteLine("d");
+            }));
+
+            BinaryWriter writer = new BinaryWriter(null);
+            writer.Write((int) 32);
+
+            DataOutputStream output = new DataOutputStream(null);
+            output.WriteInt(25);
+
+            // Encoding.Unicode.GetBytes()
+            // "ok".ToCharArray();
         }
     }
 }

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using REghzy.MathsF;
-using REghZy.MathsF;
 using REghZy.Streams;
 
 namespace REghZy.MVVM.Test {

@@ -90,6 +90,10 @@ namespace REghZy.MathsF {
             return new Vector3f(this.y * b.z - this.z * b.y, this.z * b.x - this.x * b.z, this.x * b.y - this.y * b.x);
         }
 
+        public static Vector3f Cross(Vector3f a, Vector3f b) {
+            return new Vector3f(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
+        }
+
         public float MagnitudeSquare() {
             return this.x * this.x + this.y * this.y + this.z * this.z;
         }

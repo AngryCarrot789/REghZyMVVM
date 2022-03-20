@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Threading;
 
 namespace REghZy.Utils {
     public class Time {
@@ -22,6 +23,15 @@ namespace REghZy.Utils {
         /// </para>
         /// </summary>
         public static readonly long TICK_PER_MILLIS = TICK_PER_SECOND / 1000; // windows = 10,000
+
+        /// <summary>
+        /// A multiplier for converting ticks to milliseconds
+        /// <para>
+        /// If one were to call <see cref="GetSystemMillis"/>, then <see cref="System.Threading.Thread.Sleep(int)"/>
+        /// for 1000ms, then <see cref="GetSystemMillis"/>, the interval will roughly equal to 1,000
+        /// </para>
+        /// </summary>
+        public static readonly double TICK_PER_MILLIS_D = TICK_PER_SECOND_D / 1000.0d; // windows = 10,000.0d
 
         /// <summary>
         /// A multiplier for converting ticks to milliseconds
@@ -54,6 +64,13 @@ namespace REghZy.Utils {
         }
 
         /// <summary>
+        /// Gets the system's performance counter ticks and converts them to milliseconds, as a double instead
+        /// </summary>
+        public static double GetSystemMillisD() {
+            return (double) Stopwatch.GetTimestamp() / TICK_PER_MILLIS_D;
+        }
+
+        /// <summary>
         /// Gets the system's performance counter ticks and converts them to seconds
         /// </summary>
         /// <returns></returns>
@@ -67,6 +84,44 @@ namespace REghZy.Utils {
         /// <returns></returns>
         public static double GetSystemSecondsD() {
             return (double) Stopwatch.GetTimestamp() / TICK_PER_SECOND_D;
+        }
+
+        /// <summary>
+        /// Precision thread sleep timing
+        /// <para>
+        /// This should, in most cases, guarantee the exact amount of time wanted, but it depends how tolerant <see cref="Thread.Sleep(int)"/> is
+        /// </para>
+        /// </summary>
+        /// <param name="delay">The exact number of milliseconds to sleep for</param>
+        public static void SleepFor(double delay) {
+            if (delay > 20.0d) {
+                // average windows thread-slice time == 15~ millis
+                Thread.Sleep((int) (delay - 20.0d));
+            }
+
+            double nextTick = GetSystemMillisD() + delay;
+            while (GetSystemMillisD() < nextTick) {
+                // do nothing but loop for the rest of the duration, for precise timing
+            }
+        }
+
+        /// <summary>
+        /// Precision thread sleep timing
+        /// <para>
+        /// This should, in most cases, guarantee the exact amount of time wanted, but it depends how tolerant <see cref="Thread.Sleep(int)"/> is
+        /// </para>
+        /// </summary>
+        /// <param name="delay">The exact number of milliseconds to sleep for</param>
+        public static void SleepFor(long delay) {
+            if (delay > 20) {
+                // average windows thread-slice time == 15~ millis
+                Thread.Sleep((int) (delay - 20));
+            }
+
+            long nextTick = GetSystemMillis() + delay;
+            while (GetSystemMillis() < nextTick) {
+                // do nothing but loop for the rest of the duration, for precise timing
+            }
         }
     }
 }

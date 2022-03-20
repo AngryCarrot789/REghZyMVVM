@@ -18,13 +18,11 @@ namespace REghZy.MathsF {
     /// </code>
     /// </summary>
     public struct Matrix4 {
-        /// <summary>
-        /// The first element in the matrix. This can be pointed to via pointers in order to use the matrix like a row-major array
-        /// </summary>
         public float M00; public float M01; public float M02; public float M03;
         public float M10; public float M11; public float M12; public float M13;
         public float M20; public float M21; public float M22; public float M23;
         public float M30; public float M31; public float M32; public float M33;
+
 
         // Columns; their content goes top to bottom
 
@@ -333,10 +331,10 @@ namespace REghZy.MathsF {
         }
 
         public void MakeScale(float x, float y, float z) {
-            this.M00 = x;    this.M01 = 0.0f; this.M02 = 0.0f; this.M03 = 0.0f;
-            this.M10 = 0.0f; this.M11 = y;    this.M12 = 0.0f; this.M13 = 0.0f;
-            this.M20 = 0.0f; this.M21 = 0.0f; this.M22 = z;    this.M23 = 0.0f;
-            this.M30 = 0.0f; this.M31 = 0.0f; this.M32 = 0.0f; this.M33 = 1.0f;
+            this.M00 = x;
+            this.M11 = y;
+            this.M22 = z;
+            this.M33 = 1.0f;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -344,7 +342,6 @@ namespace REghZy.MathsF {
             return new Matrix4();
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Matrix4 Identity() {
             Matrix4 matrix4 = new Matrix4();
             matrix4.MakeIdentity();
